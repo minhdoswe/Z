@@ -20,8 +20,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
         SELECT u FROM User u
         WHERE u.username = :username
             OR u.email = :email
+            OR u.phoneNumber = :phone_number
         """)
-    Optional<User> findUserByUsernameOrEmail(@Param("username") String username, @Param("email") String email);
+    Optional<User> findByIdentifier(@Param("username") String username, @Param("email") String email, @Param("phone_number") String phoneNumber);
 
     boolean existsByUsername(String username);
 
