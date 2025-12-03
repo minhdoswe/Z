@@ -1,5 +1,6 @@
 USE z;
 
+
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(20),
@@ -8,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     last_name VARCHAR(20),
     email VARCHAR(50),
     phone_number VARCHAR(10),
-    create_at TIME
+    create_at TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS posts (
