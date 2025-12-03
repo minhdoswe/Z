@@ -1,13 +1,11 @@
 package minhdoswe.socialnetwork.z.security;
 
-import minhdoswe.socialnetwork.z.dao.UserRepository;
+import minhdoswe.socialnetwork.z.repository.UserRepository;
 import minhdoswe.socialnetwork.z.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 public class CustomUserDetailsService implements UserDetailsService {

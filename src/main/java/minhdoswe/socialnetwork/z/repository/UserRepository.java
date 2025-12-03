@@ -1,4 +1,4 @@
-package minhdoswe.socialnetwork.z.dao;
+package minhdoswe.socialnetwork.z.repository;
 
 import minhdoswe.socialnetwork.z.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

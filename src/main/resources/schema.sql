@@ -6,7 +6,9 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255),
     first_name VARCHAR(20),
     last_name VARCHAR(20),
-    email VARCHAR(50)
+    email VARCHAR(50),
+    phone_number VARCHAR(10),
+    create_at TIME
 );
 
 CREATE TABLE IF NOT EXISTS posts (

@@ -2,7 +2,7 @@ package minhdoswe.socialnetwork.z.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.dao.UserRepository;
+import minhdoswe.socialnetwork.z.repository.UserRepository;
 import minhdoswe.socialnetwork.z.dto.request.LoginRequest;
 import minhdoswe.socialnetwork.z.dto.request.RegisterRequest;
 import minhdoswe.socialnetwork.z.entity.User;
