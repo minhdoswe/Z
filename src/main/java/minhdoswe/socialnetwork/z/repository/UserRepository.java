@@ -18,11 +18,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("""
         SELECT u FROM User u
-        WHERE u.username = :username
-            OR u.email = :email
-            OR u.phoneNumber = :phone_number
+        WHERE u.username = :identifier
+            OR u.email = :identifier
+            OR u.phoneNumber = :identifier
         """)
-    Optional<User> findByIdentifier(@Param("username") String username, @Param("email") String email, @Param("phone_number") String phoneNumber);
+    Optional<User> findByIdentifier(@Param("identifier") String identifier);
 
     boolean existsByUsername(String username);
 
