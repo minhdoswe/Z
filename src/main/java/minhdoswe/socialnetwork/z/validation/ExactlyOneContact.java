@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = AtLeastOneContactValidator.class)
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AtLeastOneContact {
+public @interface ExactlyOneContact {
 
     String message() default "You must provide either an email or a phone number";
     Class<?>[] groups() default {};

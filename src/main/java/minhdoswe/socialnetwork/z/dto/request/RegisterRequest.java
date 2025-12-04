@@ -2,18 +2,17 @@ package minhdoswe.socialnetwork.z.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import minhdoswe.socialnetwork.z.validation.AtLeastOneContact;
+import minhdoswe.socialnetwork.z.validation.ExactlyOneContact;
 import minhdoswe.socialnetwork.z.validation.StrongPassword;
 import minhdoswe.socialnetwork.z.validation.ValidPhoneNumber;
 import minhdoswe.socialnetwork.z.validation.ValidUsername;
 
 @Getter
 @Setter
-@AtLeastOneContact
+@ExactlyOneContact
 public class RegisterRequest {
 
     @ValidUsername
