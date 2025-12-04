@@ -46,7 +46,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 RegisterResponse.builder()
                         .username(registerRequest.getUsername())
-                        .firstName(registerRequest.getFirstname())
+                        .firstName(registerRequest.getFirstName())
                         .build()
         );
     }

@@ -27,11 +27,11 @@ public class RegisterRequest {
 
     @NotBlank(message = "Firstname cannot be blank")
     @Size(min = 2, max = 20, message = "Firstname must be between 2 and 20 characters")
-    private String firstname;
+    private String firstName;
 
     @NotBlank(message = "Lastname cannot be blank")
     @Size(min = 2, max = 20, message = "Lastname must be between 2 and 20 characters")
-    private String lastname;
+    private String lastName;
 
     @Email(message = "Invalid email format")
     private String email;

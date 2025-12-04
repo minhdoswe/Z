@@ -4,7 +4,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import minhdoswe.socialnetwork.z.dto.response.LoginResponse;
+import minhdoswe.socialnetwork.z.mapper.UserMapper;
 import minhdoswe.socialnetwork.z.repository.UserRepository;
 import minhdoswe.socialnetwork.z.dto.request.LoginRequest;
 import minhdoswe.socialnetwork.z.dto.request.RegisterRequest;
@@ -25,12 +27,14 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationManager authenticationManager;
     private final SecurityContextRepository securityContextRepository;
+    private final UserMapper userMapper;
 
     @Transactional
     public void register(RegisterRequest request) {
@@ -40,16 +44,12 @@ public class AuthService {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserAlreadyExistsException("email is already exist");
         }
-        System.out.println(request.toString());
-        User user = User.builder()
-                .username(request.getUsername())
-                .password(bCryptPasswordEncoder.encode(request.getPassword()))
-                .firstName(request.getFirstname())
-                .lastName(request.getLastname())
-                .email(request.getEmail())
-                .phoneNumber(request.getPhoneNumber())
-                .build();
+        log.info("start mapping");
+        User user = userMapper.toUser(request);
+        user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+        log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" + user.getFirstName() + " " + user.getLastName());
         userRepository.save(user);
+        log.info("User registered successfully: {}", user.getUsername());
     }
 
     public LoginResponse login(LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
@@ -60,12 +60,12 @@ public class AuthService {
         securityContextRepository.saveContext(securityContext, request, response);
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return new LoginResponse(
-                userDetails.getUsername(),
-                userDetails.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList())
-        );
+        return LoginResponse.builder()
+                .username(userDetails.getUsername())
+                .roles(userDetails.getAuthorities().stream()
+                        .map(grantedAuthority -> grantedAuthority.getAuthority())
+                        .collect(Collectors.toList()))
+                .build();
     }
 
     public Authentication authenticate(LoginRequest loginRequest) {

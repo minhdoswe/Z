@@ -1,4 +1,15 @@
 package minhdoswe.socialnetwork.z.mapper;
 
-public class UserMapper {
+import minhdoswe.socialnetwork.z.dto.request.RegisterRequest;
+import minhdoswe.socialnetwork.z.entity.User;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+@Mapper(componentModel = "spring")
+public interface UserMapper {
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "modifiedAt", ignore = true)
+    User toUser(RegisterRequest registerRequest);
 }
