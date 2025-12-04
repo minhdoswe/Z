@@ -12,7 +12,7 @@ import minhdoswe.socialnetwork.z.validation.ValidUsername;
 
 @Getter
 @Setter
-@ExactlyOneContact
+@ExactlyOneContact(message = "Provide either email OR phone number (not both)")
 public class RegisterRequest {
 
     @ValidUsername

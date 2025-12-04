@@ -2,6 +2,7 @@ package minhdoswe.socialnetwork.z.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import minhdoswe.socialnetwork.z.dto.request.LoginRequest;
 import minhdoswe.socialnetwork.z.dto.response.LoginResponse;
@@ -32,42 +33,28 @@ public class AuthController {
     private final SecurityContextRepository securityContextRepository;
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
-        System.out.println("here");
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest registerRequest, HttpServletRequest request, HttpServletResponse response) {
+        authService.register(registerRequest);
 
-        authService.register(request);
+        LoginRequest loginRequest = LoginRequest
+                .builder()
+                .identifier(registerRequest.getUsername())
+                .password(registerRequest.getPassword())
+                .build();
+        authService.login(loginRequest, request, response);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 RegisterResponse.builder()
-                        .username(request.getUsername())
-                        .firstName(request.getFirstname())
+                        .username(registerRequest.getUsername())
+                        .firstName(registerRequest.getFirstname())
                         .build()
         );
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
-        //Create token
-        Authentication authentication = authService.authenticate(loginRequest);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
 
-        //Create new empty context
-        SecurityContext securityContext =
-                SecurityContextHolder.createEmptyContext();
-        securityContext.setAuthentication(authentication);
-        SecurityContextHolder.setContext(securityContext);
-
-        //Save to repository (persist)
-        securityContextRepository.saveContext(securityContext, request, response);
-
-        //get userdetail from authentication object, which is Principal
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-        LoginResponse loginResponse = new LoginResponse(
-                userDetails.getUsername(),
-                userDetails.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList())
-        );
+        LoginResponse loginResponse = authService.login(loginRequest, request, response);
 
         return ResponseEntity.ok(loginResponse);
     }
