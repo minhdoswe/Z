@@ -12,6 +12,8 @@ import minhdoswe.socialnetwork.z.dto.request.LoginRequest;
 import minhdoswe.socialnetwork.z.dto.request.RegisterRequest;
 import minhdoswe.socialnetwork.z.entity.User;
 import minhdoswe.socialnetwork.z.exception.UserAlreadyExistsException;
+import minhdoswe.socialnetwork.z.security.user.CustomUserDetails;
+import minhdoswe.socialnetwork.z.security.user.Role;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -44,12 +46,10 @@ public class AuthService {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserAlreadyExistsException("email is already exist");
         }
-        log.info("start mapping");
         User user = userMapper.toUser(request);
         user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
-        log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" + user.getFirstName() + " " + user.getLastName());
+        user.setRole(Role.USER);
         userRepository.save(user);
-        log.info("User registered successfully: {}", user.getUsername());
     }
 
     public LoginResponse login(LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
@@ -59,7 +59,7 @@ public class AuthService {
         SecurityContextHolder.setContext(securityContext);
         securityContextRepository.saveContext(securityContext, request, response);
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         return LoginResponse.builder()
                 .username(userDetails.getUsername())
                 .roles(userDetails.getAuthorities().stream()

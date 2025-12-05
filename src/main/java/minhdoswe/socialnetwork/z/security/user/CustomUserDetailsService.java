@@ -1,4 +1,4 @@
-package minhdoswe.socialnetwork.z.security;
+package minhdoswe.socialnetwork.z.security.user;
 
 import minhdoswe.socialnetwork.z.repository.UserRepository;
 import minhdoswe.socialnetwork.z.entity.User;

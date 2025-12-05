@@ -11,6 +11,7 @@ CREATE TABLE users (
     last_name VARCHAR(20) NOT NULL,
     email VARCHAR(50) UNIQUE ,
     phone_number VARCHAR(10) UNIQUE ,
+    role ENUM('USER') NOT NULL,
     create_at TIMESTAMP NOT NULL,
     modified_at TIMESTAMP
 );

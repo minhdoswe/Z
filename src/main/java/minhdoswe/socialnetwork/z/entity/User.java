@@ -2,6 +2,7 @@ package minhdoswe.socialnetwork.z.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import minhdoswe.socialnetwork.z.security.user.Role;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -40,6 +41,10 @@ public class User {
 
     @Column(name = "phone_number", unique = true)
     private String phoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @CreatedDate
     @Column(name = "create_at", nullable = false, updatable = false)

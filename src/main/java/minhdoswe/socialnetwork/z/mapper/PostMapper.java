@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 public interface PostMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "user", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "modifiedAt", ignore = true)
     Post toPost(PostRequest request);

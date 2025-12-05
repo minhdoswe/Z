@@ -1,7 +1,7 @@
 package minhdoswe.socialnetwork.z.config;
 
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.security.CustomUserDetailsService;
+import minhdoswe.socialnetwork.z.security.user.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -23,7 +23,8 @@ public class AppConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(customUserDetailsService);
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(customUserDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }
