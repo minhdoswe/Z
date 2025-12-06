@@ -37,7 +37,7 @@ public class AuthController {
                 .identifier(registerRequest.getUsername())
                 .password(registerRequest.getPassword())
                 .build();
-        authService.login(loginRequest, request, response);
+//        authService.login(loginRequest, request, response);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 RegisterResponse.builder()

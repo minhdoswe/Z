@@ -9,8 +9,8 @@ public class ExactlyOneContactValidator implements ConstraintValidator<ExactlyOn
 
     @Override
     public boolean isValid(RegisterRequest registerRequest, ConstraintValidatorContext constraintValidatorContext) {
-        boolean hasEmail = registerRequest.getEmail() != null && !registerRequest.getEmail().isBlank();
-        boolean hasPhoneNumber = registerRequest.getPhoneNumber() != null && !registerRequest.getPhoneNumber().isBlank();
+        boolean hasEmail = registerRequest.getEmail() != null;
+        boolean hasPhoneNumber = registerRequest.getPhoneNumber() != null;
 
         return hasEmail ^ hasPhoneNumber;
     }

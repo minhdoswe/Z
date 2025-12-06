@@ -2,6 +2,8 @@ package minhdoswe.socialnetwork.z.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,6 +18,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
+@SQLDelete(sql = "UPDATE posts SET deleted = true, deleted_at = NOW() WHERE id = ?")
+@SQLRestriction("deleted = false")
 public class Post {
 
     @Id
@@ -39,4 +43,13 @@ public class Post {
     @Column(name = "modified_at", insertable = false)
     private LocalDateTime modifiedAt;
 
+    @Column(nullable = false, insertable = false)
+    private boolean deleted = false;
+
+    @Column(name = "deleted_at", insertable = false)
+    private LocalDateTime deletedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Visibility visibility;
 }

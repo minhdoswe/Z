@@ -28,6 +28,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     boolean existsByEmail(String email);
 
+    boolean existsByPhoneNumber(String phoneNumber);
+
     @Query("""
         SELECT u FROM User u
         WHERE LOWER(u.firstName) LIKE LOWER(CONCAT('%', :keyword, '%'))

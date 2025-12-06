@@ -2,7 +2,8 @@ package minhdoswe.socialnetwork.z.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import minhdoswe.socialnetwork.z.security.user.Role;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,6 +19,8 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
+@SQLDelete(sql = "UPDATE users SET deleted = true, deletedAt = now() WHERE id = ?")
+@SQLRestriction("deleted = false")
 public class User {
 
     @Id
@@ -53,6 +56,18 @@ public class User {
     @LastModifiedDate
     @Column(name = "modified_at", insertable = false)
     private LocalDateTime modifiedAt;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean deleted = false;
+
+    @Column(name = "deleted_at", insertable = false)
+    private LocalDateTime deletedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private Visibility visibility = Visibility.PUBLIC;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;

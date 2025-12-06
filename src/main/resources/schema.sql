@@ -13,7 +13,10 @@ CREATE TABLE users (
     phone_number VARCHAR(10) UNIQUE ,
     role ENUM('USER') NOT NULL,
     create_at TIMESTAMP NOT NULL,
-    modified_at TIMESTAMP
+    modified_at TIMESTAMP,
+    deleted BOOLEAN NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMP,
+    visibility ENUM('PRIVATE', 'PUBLIC') NOT NULL DEFAULT 'PUBLIC'
 );
 
 CREATE TABLE posts (
@@ -23,6 +26,10 @@ CREATE TABLE posts (
     content TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     modified_at TIMESTAMP,
+    deleted BOOLEAN NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMP,
+    visibility ENUM('PRIVATE', 'PUBLIC') NOT NULL,
+
 
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
