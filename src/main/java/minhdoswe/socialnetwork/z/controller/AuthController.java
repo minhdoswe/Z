@@ -4,10 +4,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.dto.request.LoginRequest;
-import minhdoswe.socialnetwork.z.dto.response.LoginResponse;
-import minhdoswe.socialnetwork.z.dto.request.RegisterRequest;
-import minhdoswe.socialnetwork.z.dto.response.RegisterResponse;
+import minhdoswe.socialnetwork.z.dto.request.auth.LoginRequest;
+import minhdoswe.socialnetwork.z.dto.response.auth.LoginResponse;
+import minhdoswe.socialnetwork.z.dto.request.auth.RegisterRequest;
+import minhdoswe.socialnetwork.z.dto.response.auth.RegisterResponse;
 import minhdoswe.socialnetwork.z.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor

@@ -2,6 +2,7 @@ package minhdoswe.socialnetwork.z.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import minhdoswe.socialnetwork.z.enums.Visibility;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;

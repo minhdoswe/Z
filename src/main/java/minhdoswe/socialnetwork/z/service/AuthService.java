@@ -5,14 +5,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import minhdoswe.socialnetwork.z.dto.response.LoginResponse;
+import minhdoswe.socialnetwork.z.dto.response.auth.LoginResponse;
 import minhdoswe.socialnetwork.z.exception.UserAlreadyExistsException;
 import minhdoswe.socialnetwork.z.mapper.UserMapper;
 import minhdoswe.socialnetwork.z.repository.UserRepository;
-import minhdoswe.socialnetwork.z.dto.request.LoginRequest;
-import minhdoswe.socialnetwork.z.dto.request.RegisterRequest;
+import minhdoswe.socialnetwork.z.dto.request.auth.LoginRequest;
+import minhdoswe.socialnetwork.z.dto.request.auth.RegisterRequest;
 import minhdoswe.socialnetwork.z.entity.User;
-import minhdoswe.socialnetwork.z.entity.Role;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -49,7 +48,7 @@ public class AuthService {
         }
         User user = userMapper.toUser(request);
         user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
-        user.setRole(Role.USER);
+        user.setRole(User.Role.USER);
         userRepository.save(user);
     }
 

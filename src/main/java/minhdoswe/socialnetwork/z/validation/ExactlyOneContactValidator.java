@@ -2,7 +2,7 @@ package minhdoswe.socialnetwork.z.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import minhdoswe.socialnetwork.z.dto.request.RegisterRequest;
+import minhdoswe.socialnetwork.z.dto.request.auth.RegisterRequest;
 
 
 public class ExactlyOneContactValidator implements ConstraintValidator<ExactlyOneContact, RegisterRequest> {

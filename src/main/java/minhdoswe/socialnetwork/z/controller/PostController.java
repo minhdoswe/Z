@@ -3,7 +3,7 @@ package minhdoswe.socialnetwork.z.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import minhdoswe.socialnetwork.z.dto.request.PostRequest;
+import minhdoswe.socialnetwork.z.dto.request.post.PostRequest;
 import minhdoswe.socialnetwork.z.dto.response.PostResponse;
 import minhdoswe.socialnetwork.z.service.PostService;
 import org.springframework.http.ResponseEntity;

@@ -1,9 +1,9 @@
-package minhdoswe.socialnetwork.z.dto.request;
+package minhdoswe.socialnetwork.z.dto.request.post;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import minhdoswe.socialnetwork.z.entity.Visibility;
+import minhdoswe.socialnetwork.z.enums.Visibility;
 
 @Data
 public class PostRequest {

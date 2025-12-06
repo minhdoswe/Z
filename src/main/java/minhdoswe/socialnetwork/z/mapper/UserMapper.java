@@ -1,9 +1,8 @@
 package minhdoswe.socialnetwork.z.mapper;
 
-import minhdoswe.socialnetwork.z.dto.request.RegisterRequest;
+import minhdoswe.socialnetwork.z.dto.request.auth.RegisterRequest;
 import minhdoswe.socialnetwork.z.entity.User;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(

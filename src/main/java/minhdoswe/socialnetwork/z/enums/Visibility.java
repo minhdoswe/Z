@@ -1,4 +1,4 @@
-package minhdoswe.socialnetwork.z.entity;
+package minhdoswe.socialnetwork.z.enums;
 
 public enum Visibility {
     PUBLIC,

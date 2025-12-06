@@ -1,4 +1,4 @@
-package minhdoswe.socialnetwork.z.dto.response;
+package minhdoswe.socialnetwork.z.dto.response.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

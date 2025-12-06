@@ -2,6 +2,7 @@ package minhdoswe.socialnetwork.z.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import minhdoswe.socialnetwork.z.enums.Visibility;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;
@@ -19,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE users SET deleted = true, deletedAt = now() WHERE id = ?")
+@SQLDelete(sql = "UPDATE users SET deleted = true, deleted_at = now() WHERE id = ?")
 @SQLRestriction("deleted = false")
 public class User {
 
@@ -71,4 +72,10 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
+
+    public enum Role {
+        USER,
+        MODERATOR,
+        ADMIN
+    }
 }

@@ -1,7 +1,7 @@
 package minhdoswe.socialnetwork.z.service;
 
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.dto.request.PostRequest;
+import minhdoswe.socialnetwork.z.dto.request.post.PostRequest;
 import minhdoswe.socialnetwork.z.dto.response.PostResponse;
 import minhdoswe.socialnetwork.z.entity.Post;
 import minhdoswe.socialnetwork.z.entity.User;
