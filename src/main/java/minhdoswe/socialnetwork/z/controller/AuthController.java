@@ -11,10 +11,8 @@ import minhdoswe.socialnetwork.z.dto.response.auth.RegisterResponse;
 import minhdoswe.socialnetwork.z.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,8 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
-    private final AuthenticationManager authenticationManager;
-    private final SecurityContextRepository securityContextRepository;
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest registerRequest, HttpServletRequest request, HttpServletResponse response) {
@@ -35,7 +31,7 @@ public class AuthController {
                 .identifier(registerRequest.getUsername())
                 .password(registerRequest.getPassword())
                 .build();
-//        authService.login(loginRequest, request, response);
+        authService.login(loginRequest, request, response);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 RegisterResponse.builder()
@@ -58,12 +54,5 @@ public class AuthController {
         new SecurityContextLogoutHandler()
                 .logout(request, response, authentication);
         return ResponseEntity.ok("Log out sucessfully");
-    }
-
-
-
-    @RequestMapping("/test")
-    public String test() {
-        return "oke";
     }
 }

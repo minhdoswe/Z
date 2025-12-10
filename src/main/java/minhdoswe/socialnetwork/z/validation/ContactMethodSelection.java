@@ -5,12 +5,12 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-@Constraint(validatedBy = ExactlyOneContactValidator.class)
+@Constraint(validatedBy = ContactMethodSelectionValidator.class)
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ExactlyOneContact {
+public @interface ContactMethodSelection {
 
-    String message() default "You must provide either an email or a phone number";
+    String message() default "{validation.user.contact.exclusive}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

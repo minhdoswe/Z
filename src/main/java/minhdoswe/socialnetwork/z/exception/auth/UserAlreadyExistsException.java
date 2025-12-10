@@ -1,4 +1,4 @@
-package minhdoswe.socialnetwork.z.exception;
+package minhdoswe.socialnetwork.z.exception.auth;
 
 public class UserAlreadyExistsException extends RuntimeException {
 

@@ -6,13 +6,15 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minhdoswe.socialnetwork.z.dto.response.auth.LoginResponse;
-import minhdoswe.socialnetwork.z.exception.UserAlreadyExistsException;
+import minhdoswe.socialnetwork.z.exception.auth.AccountDeactivatedException;
+import minhdoswe.socialnetwork.z.exception.auth.UserAlreadyExistsException;
 import minhdoswe.socialnetwork.z.mapper.UserMapper;
 import minhdoswe.socialnetwork.z.repository.UserRepository;
 import minhdoswe.socialnetwork.z.dto.request.auth.LoginRequest;
 import minhdoswe.socialnetwork.z.dto.request.auth.RegisterRequest;
 import minhdoswe.socialnetwork.z.entity.User;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -37,13 +39,13 @@ public class AuthService {
 
     @Transactional
     public void register(RegisterRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
+        if (userRepository.existsByUsernameIncludingDeleted(request.getUsername())) {
             throw new UserAlreadyExistsException("Username: " + request.getUsername() + " is already taken");
         }
-        if (userRepository.existsByEmail(request.getEmail())) {
+        if (userRepository.existsByEmailIncludingDeleted(request.getEmail())) {
             throw new UserAlreadyExistsException("Email is already linked to another account");
         }
-        if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
+        if (userRepository.existsByPhoneNumberIncludingDeleted(request.getPhoneNumber())) {
             throw new UserAlreadyExistsException("Phone number is already linked to another account");
         }
         User user = userMapper.toUser(request);
@@ -54,7 +56,15 @@ public class AuthService {
 
     public LoginResponse login(LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
 
-        Authentication authentication = this.authenticate(loginRequest.getIdentifier(), loginRequest.getPassword());
+        User user = userRepository.findByIdentifierIncludingDeleted(loginRequest.getIdentifier())
+                .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
+
+        Authentication authentication = this.authenticate(loginRequest);
+
+        if (user.isDeleted()) {
+            throw new AccountDeactivatedException("Account is deleted, please recover to continue");
+        }
+
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);
@@ -69,9 +79,9 @@ public class AuthService {
                 .build();
     }
 
-    public Authentication authenticate(String identifier, String password) {
+    public Authentication authenticate(LoginRequest loginRequest) {
         return authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(identifier, password)
+                new UsernamePasswordAuthenticationToken(loginRequest.getIdentifier(), loginRequest.getPassword())
         );
     }
 }

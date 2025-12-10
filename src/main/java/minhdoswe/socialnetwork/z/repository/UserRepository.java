@@ -22,13 +22,48 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             OR u.email = :identifier
             OR u.phoneNumber = :identifier
         """)
-    Optional<User> findByIdentifier(@Param("identifier") String identifier);
+    Optional<User> findByIdentifier(String identifier);
 
-    boolean existsByUsername(String username);
+    @Query(value = """
+        SELECT * FROM users
+        WHERE username = :identifier
+        OR email = :identifier
+        OR phone_number = :identifier
+        """, nativeQuery = true)
+    Optional<User> findByIdentifierIncludingDeleted(@Param("identifier") String identifier);
 
-    boolean existsByEmail(String email);
+    @Query(value = "SELECT COUNT(*) FROM users WHERE username = :username", nativeQuery = true)
+    long countByUsernameRaw(@Param("username") String username);
 
-    boolean existsByPhoneNumber(String phoneNumber);
+    default boolean existsByUsernameIncludingDeleted(String username) {
+        return countByUsernameRaw(username) > 0;
+    }
+
+    @Query(value = "SELECT COUNT(*) FROM users WHERE email = :email", nativeQuery = true)
+    long countByEmailRaw(@Param("email") String email);
+
+    default boolean existsByEmailIncludingDeleted(String email) {
+        return countByEmailRaw(email) > 0;
+    }
+
+    @Query(value = "SELECT COUNT(*) FROM users WHERE phone_number = :phone_number", nativeQuery = true)
+    long countByPhoneNumberRaw(@Param("phone_number") String phoneNumber);
+
+    default boolean existsByPhoneNumberIncludingDeleted(String phoneNumber) {
+        return countByPhoneNumberRaw(phoneNumber) > 0;
+    }
+
+    @Query(value = """
+        SELECT COUNT(*) FROM users
+        WHERE username = :identifier
+        OR email = :identifier
+        OR phone_number = :identifier
+        """, nativeQuery = true)
+    long countByIdentifierRaw(@Param("identifier") String identifier);
+
+    default boolean existsByIdentifierIncludingDeleted(String identifier) {
+        return countByIdentifierRaw(identifier) > 0;
+    }
 
     @Query("""
         SELECT u FROM User u

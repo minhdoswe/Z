@@ -5,7 +5,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import minhdoswe.socialnetwork.z.dto.request.auth.RegisterRequest;
 
 
-public class ExactlyOneContactValidator implements ConstraintValidator<ExactlyOneContact, RegisterRequest> {
+public class ContactMethodSelectionValidator implements ConstraintValidator<ContactMethodSelection, RegisterRequest> {
 
     @Override
     public boolean isValid(RegisterRequest registerRequest, ConstraintValidatorContext constraintValidatorContext) {
