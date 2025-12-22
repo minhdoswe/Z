@@ -24,7 +24,7 @@ public class RegisterRequest {
     @Name
     private String lastName;
 
-    @Email(message = "{validation.user.email.format}")
+    @Email
     private String email;
 
     @PhoneNumber

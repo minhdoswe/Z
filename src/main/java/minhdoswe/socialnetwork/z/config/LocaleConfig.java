@@ -16,7 +16,7 @@ public class LocaleConfig {
     public LocaleResolver localeResolver() {
         AcceptHeaderLocaleResolver resolver = new AcceptHeaderLocaleResolver();
 
-        resolver.setDefaultLocale(new Locale("vi"));
+        resolver.setDefaultLocale(new Locale("en"));
 
         return resolver;
     }
@@ -25,7 +25,7 @@ public class LocaleConfig {
     public MessageSource messageSource() {
         ResourceBundleMessageSource source = new ResourceBundleMessageSource();
         source.setBasename("messages");
-        source.setDefaultEncoding("UTF-8"); // VERY IMPORTANT
+        source.setDefaultEncoding("UTF-8");
         source.setFallbackToSystemLocale(false);
         return source;
     }
