@@ -12,13 +12,6 @@ public class ContactMethodSelectionValidator implements ConstraintValidator<Cont
             RegisterRequest registerRequest,
             ConstraintValidatorContext constraintValidatorContext) {
 
-        boolean isValid = registerRequest.getEmail() != null || registerRequest.getPhoneNumber() != null;
-
-        if (!isValid) {
-            if (registerRequest.getEmail())
-        }
-
-
         boolean hasEmail = registerRequest.getEmail() != null;
         boolean hasPhoneNumber = registerRequest.getPhoneNumber() != null;
 

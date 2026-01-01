@@ -2,9 +2,10 @@ package minhdoswe.socialnetwork.z.service;
 
 import lombok.RequiredArgsConstructor;
 import minhdoswe.socialnetwork.z.dto.request.post.PostRequest;
-import minhdoswe.socialnetwork.z.dto.response.PostResponse;
+import minhdoswe.socialnetwork.z.dto.response.post.PostResponseDTO;
 import minhdoswe.socialnetwork.z.entity.Post;
 import minhdoswe.socialnetwork.z.entity.User;
+import minhdoswe.socialnetwork.z.enums.Visibility;
 import minhdoswe.socialnetwork.z.mapper.PostMapper;
 import minhdoswe.socialnetwork.z.repository.PostRepository;
 import minhdoswe.socialnetwork.z.security.expression.CustomSecurityExpression;
@@ -53,9 +54,15 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<PostResponse> getAllPost() {
-        return postRepository.findAll().stream()
-                .map(postMapper::toPostResponse)
+    public List<PostResponseDTO> getPublicPosts() {
+        List<Post> publicPosts = postRepository.getPostsByVisibility(Visibility.PUBLIC);
+        return publicPosts.stream()
+                .map(post -> postMapper.toPostResponse(post))
                 .collect(Collectors.toList());
+    }
+
+    public List<Post> getMyPost() {
+        User user = securityUtils.getCurrentUser();
+        return postRepository.getPostsByUser(user);
     }
 }

@@ -14,6 +14,6 @@ public class PostRequest {
     @NotBlank
     private String content;
 
-    @NotBlank
+    @NotNull
     private Visibility visibility;
 }

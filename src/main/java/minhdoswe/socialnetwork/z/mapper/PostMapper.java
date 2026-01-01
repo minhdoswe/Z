@@ -1,9 +1,10 @@
 package minhdoswe.socialnetwork.z.mapper;
 
 import minhdoswe.socialnetwork.z.dto.request.post.PostRequest;
-import minhdoswe.socialnetwork.z.dto.response.PostResponse;
+import minhdoswe.socialnetwork.z.dto.response.post.PostResponseDTO;
 import minhdoswe.socialnetwork.z.entity.Post;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
@@ -15,7 +16,8 @@ public interface PostMapper {
 
     Post toPost(PostRequest request);
 
-    PostResponse toPostResponse(Post post);
+    @Mapping(source = "user", target = "author")
+    PostResponseDTO toPostResponse(Post post);
 
     void updatePostFromRequest(PostRequest postRequest, @MappingTarget Post existingPost);
 }

@@ -1,16 +1,14 @@
 package minhdoswe.socialnetwork.z.exception;
 
-import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.dto.response.ErrorResponse;
+import minhdoswe.socialnetwork.z.dto.response.error.ErrorResponse;
 import minhdoswe.socialnetwork.z.exception.auth.AccountDeactivatedException;
 import minhdoswe.socialnetwork.z.exception.auth.UserAlreadyExistsException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

@@ -1,5 +1,6 @@
 package minhdoswe.socialnetwork.z.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import minhdoswe.socialnetwork.z.enums.Visibility;
@@ -29,6 +30,7 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     private String title;
