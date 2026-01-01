@@ -1,8 +1,6 @@
-package minhdoswe.socialnetwork.z.dto.response;
+package minhdoswe.socialnetwork.z.dto.response.post;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
