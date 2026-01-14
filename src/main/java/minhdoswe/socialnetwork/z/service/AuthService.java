@@ -5,14 +5,22 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import minhdoswe.socialnetwork.z.dto.request.auth.RefreshTokenRequest;
+import minhdoswe.socialnetwork.z.dto.response.auth.AuthResponse;
 import minhdoswe.socialnetwork.z.dto.response.auth.LoginResponse;
+import minhdoswe.socialnetwork.z.dto.response.auth.RefreshTokenResponse;
+import minhdoswe.socialnetwork.z.entity.RefreshToken;
 import minhdoswe.socialnetwork.z.exception.auth.AccountDeactivatedException;
+import minhdoswe.socialnetwork.z.exception.auth.RefreshTokenNotFoundException;
 import minhdoswe.socialnetwork.z.exception.auth.UserAlreadyExistsException;
 import minhdoswe.socialnetwork.z.mapper.UserMapper;
+import minhdoswe.socialnetwork.z.repository.RefreshTokenRepository;
 import minhdoswe.socialnetwork.z.repository.UserRepository;
 import minhdoswe.socialnetwork.z.dto.request.auth.LoginRequest;
 import minhdoswe.socialnetwork.z.dto.request.auth.RegisterRequest;
 import minhdoswe.socialnetwork.z.entity.User;
+import minhdoswe.socialnetwork.z.util.JwtUtils;
+import minhdoswe.socialnetwork.z.util.SecurityUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,11 +42,14 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final SecurityContextRepository securityContextRepository;
     private final UserMapper userMapper;
+    private final JwtUtils jwtUtils;
+    private final RefreshTokenService refreshTokenService;
+    private final SecurityUtils securityUtils;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public void register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByUsernameIncludingDeleted(request.getUsername())) {
             throw new UserAlreadyExistsException("Username: " + request.getUsername() + " is already taken");
         }
@@ -52,9 +63,11 @@ public class AuthService {
         user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
         user.setRole(User.Role.USER);
         userRepository.save(user);
+
+        return generateRefreshTokenAndAccessToken(user);
     }
 
-    public LoginResponse login(LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
+    public AuthResponse login(LoginRequest loginRequest) {
 
         User user = userRepository.findByIdentifierIncludingDeleted(loginRequest.getIdentifier())
                 .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
@@ -64,24 +77,42 @@ public class AuthService {
         if (user.isDeleted()) {
             throw new AccountDeactivatedException("Account is deleted, please recover to continue");
         }
+        return generateRefreshTokenAndAccessToken(user);
+    }
 
-        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        securityContext.setAuthentication(authentication);
-        SecurityContextHolder.setContext(securityContext);
-        securityContextRepository.saveContext(securityContext, request, response);
+    public void logout() {
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return LoginResponse.builder()
-                .username(userDetails.getUsername())
-                .roles(userDetails.getAuthorities().stream()
-                        .map(grantedAuthority -> grantedAuthority.getAuthority())
-                        .collect(Collectors.toList()))
-                .build();
+        User user = securityUtils.getCurrentUser();
+        refreshTokenRepository.invalidateTokensByUser(user);
     }
 
     public Authentication authenticate(LoginRequest loginRequest) {
         return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getIdentifier(), loginRequest.getPassword())
         );
+    }
+
+    public AuthResponse generateRefreshTokenAndAccessToken(User user) {
+
+        String refreshToken = refreshTokenService.generate(user).getToken();
+        String accessToken = jwtUtils.generateAccessToken(user.getUsername());
+        return AuthResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public AuthResponse refresh(RefreshTokenRequest refreshTokenRequest) {
+
+        System.out.println("-----------------------" + refreshTokenRequest.getToken());
+
+        RefreshToken rt = refreshTokenRepository.findRefreshTokenByToken(refreshTokenRequest.getToken())
+                .orElseThrow(() -> new RefreshTokenNotFoundException("refresh token not found"));
+
+        refreshTokenService.validate(rt.getToken());
+
+        refreshTokenService.invalidate(rt);
+
+        return generateRefreshTokenAndAccessToken(rt.getUser());
     }
 }

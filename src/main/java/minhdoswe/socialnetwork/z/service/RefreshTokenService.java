@@ -2,6 +2,7 @@ package minhdoswe.socialnetwork.z.service;
 
 import lombok.RequiredArgsConstructor;
 import minhdoswe.socialnetwork.z.dto.request.auth.RefreshTokenRequest;
+import minhdoswe.socialnetwork.z.dto.response.auth.AuthResponse;
 import minhdoswe.socialnetwork.z.entity.RefreshToken;
 import minhdoswe.socialnetwork.z.entity.User;
 import minhdoswe.socialnetwork.z.exception.auth.RefreshTokenExpiredException;
@@ -25,7 +26,7 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final Clock clock;
 
-    @Value("{jwt.refresh-token-expiration}")
+    @Value("${jwt.refresh-token-expiration}")
     private long REFRESH_TOKEN_EXPIRATION;
 
     public RefreshToken validate(String token) {
@@ -45,14 +46,14 @@ public class RefreshTokenService {
     }
 
     @Transactional
-    public void invalidate(RefreshToken refreshToken) {
+    void invalidate(RefreshToken refreshToken) {
 
         refreshToken.setRevoked(true);
         refreshTokenRepository.save(refreshToken);
     }
 
     @Transactional
-    public RefreshToken generate(User user) {
+    RefreshToken generate(User user) {
 
         SecureRandom secureRandom = new SecureRandom();
         byte[] bytes = new byte[32];
@@ -65,12 +66,5 @@ public class RefreshTokenService {
                     .expiresAt(LocalDateTime.now(clock).plus(REFRESH_TOKEN_EXPIRATION, ChronoUnit.MILLIS))
                     .token(Base64.getUrlEncoder().withoutPadding().encodeToString(bytes))
                     .build());
-    }
-
-    public RefreshToken refresh(String token) {
-
-        RefreshToken refreshToken = validate(token);
-        invalidate(refreshToken);
-        return generate(refreshToken.getUser());
     }
 }
