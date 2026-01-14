@@ -21,3 +21,6 @@ logging:
       springframework:
         security:
           DEBUG
+
+jwt:
+  refresh-token-expiration: 60480000
