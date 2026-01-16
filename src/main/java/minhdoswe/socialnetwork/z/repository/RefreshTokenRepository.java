@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Ref;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
@@ -20,5 +22,12 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
         SET rt.isRevoked = true
         WHERE rt.user = :user
 """)
-    void invalidateTokensByUser(@Param("user") User user);
+    void invalidateTokensByUser(User user);
+
+    @Modifying
+    @Query("""
+        DELETE RefreshToken rt
+        WHERE rt.isRevoked = true
+""")
+    void deleteRefreshTokensByRevoked();
 }

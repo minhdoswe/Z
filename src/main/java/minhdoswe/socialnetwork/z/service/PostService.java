@@ -65,4 +65,6 @@ public class PostService {
         User user = securityUtils.getCurrentUser();
         return postRepository.getPostsByUser(user);
     }
+
+
 }

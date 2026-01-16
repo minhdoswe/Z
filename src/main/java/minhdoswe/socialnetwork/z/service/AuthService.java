@@ -80,9 +80,11 @@ public class AuthService {
         return generateRefreshTokenAndAccessToken(user);
     }
 
+    @Transactional
     public void logout() {
 
         User user = securityUtils.getCurrentUser();
+        log.info(user.getUsername());
         refreshTokenRepository.invalidateTokensByUser(user);
     }
 
@@ -104,7 +106,6 @@ public class AuthService {
 
     public AuthResponse refresh(RefreshTokenRequest refreshTokenRequest) {
 
-        System.out.println("-----------------------" + refreshTokenRequest.getToken());
 
         RefreshToken rt = refreshTokenRepository.findRefreshTokenByToken(refreshTokenRequest.getToken())
                 .orElseThrow(() -> new RefreshTokenNotFoundException("refresh token not found"));
