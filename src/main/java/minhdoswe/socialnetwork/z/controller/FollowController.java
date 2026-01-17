@@ -1,6 +1,7 @@
 package minhdoswe.socialnetwork.z.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import minhdoswe.socialnetwork.z.dto.request.follow.FollowRequest;
 import minhdoswe.socialnetwork.z.dto.response.follow.FollowResponse;
 import minhdoswe.socialnetwork.z.service.FollowService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/follow")
+@Slf4j
 public class FollowController {
 
     private final SecurityUtils securityUtils;
@@ -28,12 +30,12 @@ public class FollowController {
     }
 
     @DeleteMapping("/{targetId}")
-    public ResponseEntity<Void> unfollow(@PathVariable Long targetId) {
-
+    public ResponseEntity<String> unfollow(@PathVariable Long targetId) {
+        log.info("reached unfollow controller for target: " + targetId);
         Long followerId = securityUtils.getCurrentUser().getId();
 
-        FollowResponse followResponse = followService.unfollow(followerId, targetId);
+        followService.unfollow(followerId, targetId); // Assuming this returns void or response
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Unfollowed successfully");
     }
 }
