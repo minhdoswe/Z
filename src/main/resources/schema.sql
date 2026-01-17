@@ -1,9 +1,10 @@
 USE z;
 
-DROP TABLE IF EXISTS posts;
-
 DROP TABLE IF EXISTS follows;
-DROP TABLE IF EXISTS refresh_tokens;DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS votes;
+DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS refresh_tokens;
+DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -31,9 +32,11 @@ CREATE TABLE posts (
     deleted BOOLEAN NOT NULL DEFAULT 0,
     deleted_at TIMESTAMP,
     visibility ENUM('PRIVATE', 'PUBLIC') NOT NULL,
+    upvote_count BIGINT NOT NULL,
+    downvote_count BIGINT NOT NULL,
 
 
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE follows (
@@ -42,8 +45,10 @@ CREATE TABLE follows (
     target_id BIGINT NOT NULL,
     created_at TIMESTAMP NOT NULL,
 
-    FOREIGN KEY (follower_id) REFERENCES users(id),
-    FOREIGN KEY (target_id) REFERENCES users(id)
+    FOREIGN KEY (follower_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (target_id) REFERENCES users(id) ON DELETE CASCADE,
+
+    CONSTRAINT uk_follower_target UNIQUE (follower_id, target_id)
 );
 
 CREATE TABLE refresh_tokens (
@@ -53,5 +58,19 @@ CREATE TABLE refresh_tokens (
     expires_at TIMESTAMP NOT NULL,
     is_revoked BOOLEAN NOT NULL,
 
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+CREATE TABLE votes (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    post_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    vote_status enum('UPVOTE', 'DOWNVOTE') NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+
+    CONSTRAINT uk_post_user UNIQUE (post_id, user_id)
+)
+

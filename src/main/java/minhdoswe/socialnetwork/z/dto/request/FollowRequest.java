@@ -1,4 +1,4 @@
-package minhdoswe.socialnetwork.z.dto.request.follow;
+package minhdoswe.socialnetwork.z.dto.request;
 
 import lombok.Data;
 

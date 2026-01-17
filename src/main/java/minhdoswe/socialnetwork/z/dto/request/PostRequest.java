@@ -1,4 +1,4 @@
-package minhdoswe.socialnetwork.z.dto.request.post;
+package minhdoswe.socialnetwork.z.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

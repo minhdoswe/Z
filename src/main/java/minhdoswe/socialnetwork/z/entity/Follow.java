@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
                     name = "uk_follower_target",
                     columnNames = {"follower_id", "target_id"}
             )
-        })
+})
 @Getter
 @Setter
 @Builder

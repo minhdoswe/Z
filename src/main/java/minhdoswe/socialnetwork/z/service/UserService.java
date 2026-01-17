@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import minhdoswe.socialnetwork.z.dto.request.auth.DeleteAccountRequest;
 import minhdoswe.socialnetwork.z.dto.request.auth.RecoverAccountRequest;
 import minhdoswe.socialnetwork.z.entity.User;
+import minhdoswe.socialnetwork.z.exception.user.UserNotFoundException;
 import minhdoswe.socialnetwork.z.mapper.AuthMapper;
 import minhdoswe.socialnetwork.z.repository.UserRepository;
 import minhdoswe.socialnetwork.z.util.SecurityUtils;
@@ -42,5 +43,17 @@ public class UserService {
         user.setDeleted(false);
         user.setDeletedAt(null);
         userRepository.save(user);
+    }
+
+    public User getUserById(Long userId) {
+
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id " + userId));
+    }
+
+    public User getUserByUsername(String username) {
+
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found with username " + username));
     }
 }

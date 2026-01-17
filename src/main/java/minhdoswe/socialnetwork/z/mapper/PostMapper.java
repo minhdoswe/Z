@@ -1,7 +1,7 @@
 package minhdoswe.socialnetwork.z.mapper;
 
-import minhdoswe.socialnetwork.z.dto.request.post.PostRequest;
-import minhdoswe.socialnetwork.z.dto.response.PostResponseDTO;
+import minhdoswe.socialnetwork.z.dto.request.PostRequest;
+import minhdoswe.socialnetwork.z.dto.response.PostResponse;
 import minhdoswe.socialnetwork.z.entity.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,10 +14,12 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface PostMapper {
 
+    @Mapping(target = "upvoteCount", ignore = true)
+    @Mapping(target = "downvoteCount", ignore = true)
     Post toPost(PostRequest request);
 
     @Mapping(source = "user", target = "author")
-    PostResponseDTO toPostResponse(Post post);
+    PostResponse toPostResponse(Post post);
 
     void updatePostFromRequest(PostRequest postRequest, @MappingTarget Post existingPost);
 }

@@ -11,7 +11,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "votes")
+@Table(name = "votes",
+        uniqueConstraints = {
+            @UniqueConstraint(
+                    name = "uk_post_user",
+                    columnNames = {"post_id", "user_id"}
+            )
+})
 @EntityListeners(AuditingEntityListener.class)
 @Builder
 @Getter
@@ -32,7 +38,8 @@ public class Vote {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
+    @Column(name = "vote_status")
     private VoteStatus voteStatus;
 
     @CreatedDate

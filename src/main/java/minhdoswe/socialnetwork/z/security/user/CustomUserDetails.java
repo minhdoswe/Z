@@ -1,5 +1,6 @@
 package minhdoswe.socialnetwork.z.security.user;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import minhdoswe.socialnetwork.z.entity.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Getter
 public class CustomUserDetails implements UserDetails {
 
     private final User user;

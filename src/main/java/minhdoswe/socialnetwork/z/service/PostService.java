@@ -1,11 +1,12 @@
 package minhdoswe.socialnetwork.z.service;
 
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.dto.request.post.PostRequest;
-import minhdoswe.socialnetwork.z.dto.response.PostResponseDTO;
+import minhdoswe.socialnetwork.z.dto.request.PostRequest;
+import minhdoswe.socialnetwork.z.dto.response.PostResponse;
 import minhdoswe.socialnetwork.z.entity.Post;
 import minhdoswe.socialnetwork.z.entity.User;
 import minhdoswe.socialnetwork.z.enums.Visibility;
+import minhdoswe.socialnetwork.z.exception.post.PostNotFoundException;
 import minhdoswe.socialnetwork.z.mapper.PostMapper;
 import minhdoswe.socialnetwork.z.repository.FollowRepository;
 import minhdoswe.socialnetwork.z.repository.PostRepository;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +58,7 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<PostResponseDTO> findPostByUserId(Long targetId) {
+    public List<PostResponse> findPostByUserId(Long targetId) {
 
         User user = securityUtils.getCurrentUser();
         Long userId = user.getId();
@@ -80,16 +80,21 @@ public class PostService {
         return fetchPostsByNonFollower(targetUser);
     }
 
-    private List<PostResponseDTO> fetchPostsByOwnerOrFollower(User user) {
+    private List<PostResponse> fetchPostsByOwnerOrFollower(User user) {
         return postRepository.findPostsByUser(user)
                 .stream().map(postMapper::toPostResponse)
                 .toList();
     }
 
-    private List<PostResponseDTO> fetchPostsByNonFollower(User user) {
+    private List<PostResponse> fetchPostsByNonFollower(User user) {
         return postRepository.findPostsByUserAndVisibility(user, Visibility.PUBLIC)
                 .stream().map(postMapper::toPostResponse)
                 .toList();
+    }
+
+    public Post getPostById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("Post not found"));
     }
 
 

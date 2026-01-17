@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import minhdoswe.socialnetwork.z.enums.Visibility;
+import minhdoswe.socialnetwork.z.enums.VoteStatus;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;
@@ -11,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -55,4 +57,12 @@ public class Post {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Visibility visibility;
+
+    @Column(name = "upvote_count")
+    @Builder.Default
+    private Long upvoteCount = 0L;
+
+    @Column(name = "downvote_count")
+    @Builder.Default
+    private Long downvoteCount = 0L;
 }

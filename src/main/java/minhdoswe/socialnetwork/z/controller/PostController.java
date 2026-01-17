@@ -3,9 +3,8 @@ package minhdoswe.socialnetwork.z.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import minhdoswe.socialnetwork.z.dto.request.post.PostRequest;
-import minhdoswe.socialnetwork.z.dto.response.PostResponseDTO;
-import minhdoswe.socialnetwork.z.entity.Post;
+import minhdoswe.socialnetwork.z.dto.request.PostRequest;
+import minhdoswe.socialnetwork.z.dto.response.PostResponse;
 import minhdoswe.socialnetwork.z.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +38,8 @@ public class PostController {
     }
 
     @GetMapping("/user/{targetId}")
-    public ResponseEntity<List<PostResponseDTO>> findPostsByTargetId(@PathVariable Long targetId) {
-        List<PostResponseDTO> postResponseDTOList = postService.findPostByUserId(targetId);
+    public ResponseEntity<List<PostResponse>> findPostsByTargetId(@PathVariable Long targetId) {
+        List<PostResponse> postResponseDTOList = postService.findPostByUserId(targetId);
 
         return ResponseEntity.ok(postResponseDTOList);
     }
