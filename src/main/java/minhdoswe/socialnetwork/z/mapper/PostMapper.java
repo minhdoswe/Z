@@ -1,7 +1,7 @@
 package minhdoswe.socialnetwork.z.mapper;
 
 import minhdoswe.socialnetwork.z.dto.request.post.PostRequest;
-import minhdoswe.socialnetwork.z.dto.response.post.PostResponseDTO;
+import minhdoswe.socialnetwork.z.dto.response.PostResponseDTO;
 import minhdoswe.socialnetwork.z.entity.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

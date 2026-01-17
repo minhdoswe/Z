@@ -1,4 +1,4 @@
-package minhdoswe.socialnetwork.z.dto.response.follow;
+package minhdoswe.socialnetwork.z.dto.response;
 
 import lombok.Builder;
 import lombok.Data;

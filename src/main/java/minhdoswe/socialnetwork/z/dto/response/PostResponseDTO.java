@@ -1,4 +1,4 @@
-package minhdoswe.socialnetwork.z.dto.response.post;
+package minhdoswe.socialnetwork.z.dto.response;
 
 import lombok.Data;
 import minhdoswe.socialnetwork.z.dto.response.author.AuthorDTO;

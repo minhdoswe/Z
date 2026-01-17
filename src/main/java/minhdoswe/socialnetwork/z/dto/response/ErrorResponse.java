@@ -1,4 +1,4 @@
-package minhdoswe.socialnetwork.z.dto.response.error;
+package minhdoswe.socialnetwork.z.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

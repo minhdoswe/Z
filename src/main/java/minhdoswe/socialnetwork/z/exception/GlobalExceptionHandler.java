@@ -2,7 +2,7 @@ package minhdoswe.socialnetwork.z.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.dto.response.error.ErrorResponse;
+import minhdoswe.socialnetwork.z.dto.response.ErrorResponse;
 import minhdoswe.socialnetwork.z.exception.auth.AccountDeactivatedException;
 import minhdoswe.socialnetwork.z.exception.auth.UserAlreadyExistsException;
 import org.springframework.dao.DataIntegrityViolationException;

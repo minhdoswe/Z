@@ -1,15 +1,13 @@
 package minhdoswe.socialnetwork.z.service;
 
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.dto.response.follow.FollowResponse;
+import minhdoswe.socialnetwork.z.dto.response.FollowResponse;
 import minhdoswe.socialnetwork.z.entity.Follow;
 import minhdoswe.socialnetwork.z.entity.User;
 import minhdoswe.socialnetwork.z.exception.post.FollowAlreadyEstablishedException;
-import minhdoswe.socialnetwork.z.exception.post.FollowNotFoundException;
 import minhdoswe.socialnetwork.z.exception.post.UsersFollowThemselfException;
 import minhdoswe.socialnetwork.z.repository.FollowRepository;
 import minhdoswe.socialnetwork.z.repository.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

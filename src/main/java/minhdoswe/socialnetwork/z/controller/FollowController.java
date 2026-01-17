@@ -1,8 +1,7 @@
 package minhdoswe.socialnetwork.z.controller;
 
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.dto.request.follow.FollowRequest;
-import minhdoswe.socialnetwork.z.dto.response.follow.FollowResponse;
+import minhdoswe.socialnetwork.z.dto.response.FollowResponse;
 import minhdoswe.socialnetwork.z.service.FollowService;
 import minhdoswe.socialnetwork.z.util.SecurityUtils;
 import org.springframework.http.HttpStatus;
