@@ -38,15 +38,12 @@ public class PostController {
         return ResponseEntity.ok("Post modified successfully");
     }
 
-    @GetMapping()
-    public ResponseEntity<List<PostResponseDTO>> getPublicPosts() {
-        List<PostResponseDTO> publicPosts = postService.getPublicPosts();
-        return ResponseEntity.ok(publicPosts);
+    @GetMapping("/user/{targetId}")
+    public ResponseEntity<List<PostResponseDTO>> findPostsByTargetId(@PathVariable Long targetId) {
+        List<PostResponseDTO> postResponseDTOList = postService.findPostByUserId(targetId);
+
+        return ResponseEntity.ok(postResponseDTOList);
     }
 
-    @GetMapping("/myprofile")
-    public ResponseEntity<List<Post>> getMyPosts() {
-        List<Post> myPosts = postService.getMyPost();
-        return ResponseEntity.ok(myPosts);
-    }
+
 }

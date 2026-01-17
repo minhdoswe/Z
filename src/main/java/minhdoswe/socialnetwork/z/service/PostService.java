@@ -7,7 +7,9 @@ import minhdoswe.socialnetwork.z.entity.Post;
 import minhdoswe.socialnetwork.z.entity.User;
 import minhdoswe.socialnetwork.z.enums.Visibility;
 import minhdoswe.socialnetwork.z.mapper.PostMapper;
+import minhdoswe.socialnetwork.z.repository.FollowRepository;
 import minhdoswe.socialnetwork.z.repository.PostRepository;
+import minhdoswe.socialnetwork.z.repository.UserRepository;
 import minhdoswe.socialnetwork.z.security.expression.CustomSecurityExpression;
 import minhdoswe.socialnetwork.z.util.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +27,8 @@ public class PostService {
     private final SecurityUtils securityUtils;
     private final PostMapper postMapper;
     private final CustomSecurityExpression customSecurity;
+    private final FollowRepository followRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public void createPost(PostRequest postRequest) {
@@ -54,17 +58,40 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public List<PostResponseDTO> getPublicPosts() {
-        List<Post> publicPosts = postRepository.getPostsByVisibility(Visibility.PUBLIC);
-        return publicPosts.stream()
-                .map(post -> postMapper.toPostResponse(post))
-                .collect(Collectors.toList());
+    public List<PostResponseDTO> findPostByUserId(Long targetId) {
+
+        User user = securityUtils.getCurrentUser();
+        Long userId = user.getId();
+
+        boolean isOwner = userId.equals(targetId);
+
+        if (isOwner) {
+            return fetchPostsByOwnerOrFollower(user);
+        }
+
+        boolean isFollower = followRepository.existsFollowByFollowerIdAndTargetId(userId, targetId);
+
+        User targetUser = userRepository.getReferenceById(targetId);
+
+        if (isFollower) {
+            return fetchPostsByOwnerOrFollower(targetUser);
+        }
+
+        return fetchPostsByNonFollower(targetUser);
     }
 
-    public List<Post> getMyPost() {
-        User user = securityUtils.getCurrentUser();
-        return postRepository.getPostsByUser(user);
+    private List<PostResponseDTO> fetchPostsByOwnerOrFollower(User user) {
+        return postRepository.findPostsByUser(user)
+                .stream().map(postMapper::toPostResponse)
+                .toList();
     }
+
+    private List<PostResponseDTO> fetchPostsByNonFollower(User user) {
+        return postRepository.findPostsByUserAndVisibility(user, Visibility.PUBLIC)
+                .stream().map(postMapper::toPostResponse)
+                .toList();
+    }
+
 
 
 }

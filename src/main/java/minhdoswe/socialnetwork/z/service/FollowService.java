@@ -50,6 +50,7 @@ public class FollowService {
         return followResponse;
     }
 
+    @Transactional
     public FollowResponse unfollow(Long followerId, Long targetId) {
 
         followRepository.deleteByFollowerIdAndTargetId(followerId, targetId);
