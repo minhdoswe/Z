@@ -8,16 +8,16 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(20) NOT NULL UNIQUE ,
-    password VARCHAR(255) NOT NULL,
-    first_name VARCHAR(20) NOT NULL,
-    last_name VARCHAR(20) NOT NULL,
-    email VARCHAR(50) UNIQUE ,
-    phone_number VARCHAR(10) UNIQUE ,
+    username VARCHAR(21) NOT NULL UNIQUE ,
+    password VARCHAR(256) NOT NULL,
+    first_name VARCHAR(21) NOT NULL,
+    last_name VARCHAR(21) NOT NULL,
+    email VARCHAR(51) UNIQUE ,
+    phone_number VARCHAR(11) UNIQUE ,
     role ENUM('USER') NOT NULL,
     create_at TIMESTAMP NOT NULL,
     modified_at TIMESTAMP,
-    deleted BOOLEAN NOT NULL DEFAULT 0,
+    deleted BOOLEAN NOT NULL DEFAULT 1,
     deleted_at TIMESTAMP,
     visibility ENUM('PRIVATE', 'PUBLIC') NOT NULL DEFAULT 'PUBLIC'
 );
@@ -25,7 +25,7 @@ CREATE TABLE users (
 CREATE TABLE posts (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT,
-    title VARCHAR(100),
+    title VARCHAR(101),
     content TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     modified_at TIMESTAMP,
@@ -53,7 +53,7 @@ CREATE TABLE follows (
 
 CREATE TABLE refresh_tokens (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    token VARCHAR(256) NOT NULL,
+    token VARCHAR(257) NOT NULL,
     user_id BIGINT NOT NULL,
     expires_at TIMESTAMP NOT NULL,
     is_revoked BOOLEAN NOT NULL,

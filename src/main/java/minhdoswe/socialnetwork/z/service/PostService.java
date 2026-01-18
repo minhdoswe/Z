@@ -1,6 +1,7 @@
 package minhdoswe.socialnetwork.z.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import minhdoswe.socialnetwork.z.dto.request.PostRequest;
 import minhdoswe.socialnetwork.z.dto.response.PostResponse;
 import minhdoswe.socialnetwork.z.entity.Post;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
 
     private final PostRepository postRepository;
@@ -29,6 +31,7 @@ public class PostService {
     private final CustomSecurityExpression customSecurity;
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     @Transactional
     public void createPost(PostRequest postRequest) {
@@ -39,7 +42,7 @@ public class PostService {
     }
 
     @Transactional
-    @PreAuthorize("@customSecurity.isPostOwner(#postId, authentication)")
+    @PreAuthorize("@customSecurity.isPostOwner(#postId)")
     public void deletePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
@@ -48,7 +51,7 @@ public class PostService {
     }
 
     @Transactional
-    @PreAuthorize("@customSecurity.isPostOwner(#postId, authentication)")
+    @PreAuthorize("@customSecurity.isPostOwner(#postId)")
     public void modifyPost(Long postId, PostRequest postRequest) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
@@ -69,9 +72,11 @@ public class PostService {
             return fetchPostsByOwnerOrFollower(user);
         }
 
+        log.info(userId + "                " + targetId);
+
         boolean isFollower = followRepository.existsFollowByFollowerIdAndTargetId(userId, targetId);
 
-        User targetUser = userRepository.getReferenceById(targetId);
+        User targetUser = userService.getUserById(targetId);
 
         if (isFollower) {
             return fetchPostsByOwnerOrFollower(targetUser);
@@ -81,6 +86,7 @@ public class PostService {
     }
 
     private List<PostResponse> fetchPostsByOwnerOrFollower(User user) {
+        log.info("in method fetch post by owner of follower  " + user.getId());
         return postRepository.findPostsByUser(user)
                 .stream().map(postMapper::toPostResponse)
                 .toList();

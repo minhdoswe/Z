@@ -21,6 +21,10 @@ logging:
       springframework:
         security:
           DEBUG
+    hibernate:
+      orm:
+        jdbc:
+          bind: TRACE
 
 jwt:
   refresh-token-expiration: 60480000

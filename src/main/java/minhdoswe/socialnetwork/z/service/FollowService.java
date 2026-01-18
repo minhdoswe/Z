@@ -66,4 +66,8 @@ public class FollowService {
         return followRepository.existsFollowByFollowerIdAndTargetId(user1Id, user2Id)
         && followRepository.existsFollowByFollowerIdAndTargetId(user2Id, user1Id);
     }
+
+    public boolean existsFollowByFollowerIdAndTargetId(Long followerId, Long targetId) {
+        return followRepository.existsFollowByFollowerIdAndTargetId(followerId, targetId);
+    }
 }

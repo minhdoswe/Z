@@ -1,18 +1,22 @@
 package minhdoswe.socialnetwork.z.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import minhdoswe.socialnetwork.z.dto.request.VoteRequest;
 import minhdoswe.socialnetwork.z.dto.response.VoteDTO;
 import minhdoswe.socialnetwork.z.dto.response.VoteResponse;
 import minhdoswe.socialnetwork.z.entity.Post;
 import minhdoswe.socialnetwork.z.entity.User;
 import minhdoswe.socialnetwork.z.entity.Vote;
+import minhdoswe.socialnetwork.z.enums.Visibility;
 import minhdoswe.socialnetwork.z.enums.VoteStatus;
 import minhdoswe.socialnetwork.z.exception.post.PostNotFoundException;
 import minhdoswe.socialnetwork.z.mapper.VoteMapper;
 import minhdoswe.socialnetwork.z.repository.PostRepository;
 import minhdoswe.socialnetwork.z.repository.VoteRepository;
+import minhdoswe.socialnetwork.z.security.expression.CustomSecurityExpression;
 import minhdoswe.socialnetwork.z.util.SecurityUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +25,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class VoteService {
 
     private final PostService postService;
@@ -29,6 +34,7 @@ public class VoteService {
     private final SecurityUtils securityUtils;
     private final VoteMapper voteMapper;
     private final UserService userService;
+    private final CustomSecurityExpression customSecurity;
 
     @Transactional
     public VoteResponse vote(Long postId, VoteRequest voteRequest) {
@@ -89,6 +95,7 @@ public class VoteService {
         return new VoteContext(post, user);
     }
 
+    @PreAuthorize("@customSecurity.canView(#postId)")
     public List<VoteDTO> getVotesByPost(Long postId, VoteRequest voteRequest) {
 
         Post post = postService.getPostById(postId);
@@ -97,11 +104,11 @@ public class VoteService {
                 .toList();
     }
 
-    public List<VoteDTO> getVotesByUser(Long userId) {
+    public List<VoteDTO> getVotesByUser(Long targetUserId) {
 
-        User user = userService.getUserById(userId);
-
-        return voteRepository.findVotesByUser(user)
+        Long currentUserId = securityUtils.getCurrentUser().getId();
+        log.info(currentUserId + "                     " + targetUserId);
+        return voteRepository.findVisibleVotesByTargetUser(currentUserId, targetUserId)
                 .stream().map(voteMapper::toVoteDTO)
                 .toList();
     }
