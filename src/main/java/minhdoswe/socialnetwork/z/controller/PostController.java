@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import minhdoswe.socialnetwork.z.dto.request.PostRequest;
 import minhdoswe.socialnetwork.z.dto.response.PostResponse;
 import minhdoswe.socialnetwork.z.service.PostService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,32 +15,40 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/post")
+@RequestMapping("/api")
 public class PostController {
 
     private final PostService postService;
 
-    @PostMapping
-    public ResponseEntity<String> createPost(@Valid @RequestBody PostRequest postRequest) {
-        postService.createPost(postRequest);
-        return ResponseEntity.ok("Success");
+    @PostMapping("/posts")
+    public ResponseEntity<PostResponse> create(@Valid @RequestBody PostRequest postRequest) {
+        PostResponse postResponse = postService.create(postRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(postResponse);
     }
 
-    @DeleteMapping("/{postId}")
-    public ResponseEntity<String> deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
-        return ResponseEntity.ok("Post deleted successfully");
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<PostResponse> get(@PathVariable Long postId) {
+
+        PostResponse postResponse = postService.getById(postId);
+
+        return ResponseEntity.ok(postResponse);
     }
 
-    @PutMapping("/{postId}")
-    public ResponseEntity<String> modifyPost(@PathVariable Long postId, @RequestBody PostRequest postRequest) {
-        postService.modifyPost(postId, postRequest);
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<Void> delete(@PathVariable Long postId) {
+        postService.delete(postId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/posts/{postId}")
+    public ResponseEntity<String> modify(@PathVariable Long postId, @RequestBody PostRequest postRequest) {
+        postService.modify(postId, postRequest);
         return ResponseEntity.ok("Post modified successfully");
     }
 
-    @GetMapping("/user/{targetId}")
-    public ResponseEntity<List<PostResponse>> findPostsByTargetId(@PathVariable Long targetId) {
-        List<PostResponse> postResponseDTOList = postService.findPostByUserId(targetId);
+    @GetMapping("/users/{userId}/posts")
+    public ResponseEntity<List<PostResponse>> findByUserId(@PathVariable Long userId) {
+        List<PostResponse> postResponseDTOList = postService.findByUserId(userId);
 
         return ResponseEntity.ok(postResponseDTOList);
     }

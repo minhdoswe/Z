@@ -14,8 +14,6 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface PostMapper {
 
-    @Mapping(target = "upvoteCount", ignore = true)
-    @Mapping(target = "downvoteCount", ignore = true)
     Post toPost(PostRequest request);
 
     @Mapping(source = "user", target = "author")

@@ -1,5 +1,7 @@
 USE z;
 
+DROP TABLE IF EXISTS comment_votes;
+DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS follows;
 DROP TABLE IF EXISTS votes;
 DROP TABLE IF EXISTS posts;
@@ -34,6 +36,7 @@ CREATE TABLE posts (
     visibility ENUM('PRIVATE', 'PUBLIC') NOT NULL,
     upvote_count BIGINT NOT NULL,
     downvote_count BIGINT NOT NULL,
+    vote_score BIGINT NOT NULL,
 
 
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -72,5 +75,33 @@ CREATE TABLE votes (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
 
     CONSTRAINT uk_post_user UNIQUE (post_id, user_id)
+);
+
+CREATE TABLE comments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    content TEXT NOT NULL,
+    post_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    parent_id BIGINT,
+    created_at TIMESTAMP NOT NULL,
+    modified_at TIMESTAMP,
+    deleted BOOLEAN NOT NULL,
+    deleted_at TIMESTAMP,
+
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE
+);
+
+CREATE TABLE comment_votes (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    comment_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    vote_status enum('UPVOTE', 'DOWNVOTE') NOT NULL,
+
+    FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+
+    CONSTRAINT uk_comment_user UNIQUE (comment_id, user_id)
 )
 

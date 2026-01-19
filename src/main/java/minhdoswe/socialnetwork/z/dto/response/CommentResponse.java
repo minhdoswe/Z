@@ -5,14 +5,10 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class PostResponse {
+public class CommentResponse {
 
     private Long id;
-    private UserDTO author;
-    private String title;
     private String content;
-    private Long upvoteCount;
-    private Long downvoteCount;
+    private UserDTO userDTO;
     private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
 }

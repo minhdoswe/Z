@@ -1,9 +1,9 @@
-package minhdoswe.socialnetwork.z.dto.response.author;
+package minhdoswe.socialnetwork.z.dto.response;
 
 import lombok.Data;
 
 @Data
-public class AuthorDTO {
+public class UserDTO {
 
     private int id;
     private String username;

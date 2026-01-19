@@ -28,15 +28,13 @@ import java.util.Optional;
 @Slf4j
 public class VoteService {
 
-    private final PostService postService;
     private final PostRepository postRepository;
     private final VoteRepository voteRepository;
     private final SecurityUtils securityUtils;
     private final VoteMapper voteMapper;
-    private final UserService userService;
-    private final CustomSecurityExpression customSecurity;
 
     @Transactional
+    @PreAuthorize("@customSecurity.canViewPost(#postId)")
     public VoteResponse vote(Long postId, VoteRequest voteRequest) {
 
         VoteContext voteContext = getVoteContext(postId);
@@ -72,14 +70,13 @@ public class VoteService {
         long downvoteCount = voteRepository.countVotesByPostAndVoteStatus(post, VoteStatus.DOWNVOTE);
         post.setUpvoteCount(upvoteCount);
         post.setDownvoteCount(downvoteCount);
+        post.setVoteScore(upvoteCount - downvoteCount);
 
         postRepository.save(post);
 
         //build the response
         VoteResponse voteResponse = voteMapper.toVoteResponse(voteRequest);
         voteResponse.setPostId(postId);
-        voteResponse.setUpvoteCount(upvoteCount);
-        voteResponse.setDownvoteCount(downvoteCount);
 
         return voteResponse;
     }
@@ -90,15 +87,17 @@ public class VoteService {
 
         User user = securityUtils.getCurrentUser();
 
-        Post post = postService.getPostById(postId);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("post not found"));
 
         return new VoteContext(post, user);
     }
 
-    @PreAuthorize("@customSecurity.canView(#postId)")
+    @PreAuthorize("@customSecurity.canViewPost(#postId)")
     public List<VoteDTO> getVotesByPost(Long postId, VoteRequest voteRequest) {
 
-        Post post = postService.getPostById(postId);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("post not found"));
         return voteRepository.findVotesByPostAndVoteStatus(post, voteRequest.getVoteStatus())
                 .stream().map(voteMapper::toVoteDTO)
                 .toList();
@@ -107,7 +106,6 @@ public class VoteService {
     public List<VoteDTO> getVotesByUser(Long targetUserId) {
 
         Long currentUserId = securityUtils.getCurrentUser().getId();
-        log.info(currentUserId + "                     " + targetUserId);
         return voteRepository.findVisibleVotesByTargetUser(currentUserId, targetUserId)
                 .stream().map(voteMapper::toVoteDTO)
                 .toList();

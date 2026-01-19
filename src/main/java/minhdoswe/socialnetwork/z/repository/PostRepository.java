@@ -1,19 +1,14 @@
 package minhdoswe.socialnetwork.z.repository;
 
 import minhdoswe.socialnetwork.z.entity.Post;
-import minhdoswe.socialnetwork.z.entity.User;
 import minhdoswe.socialnetwork.z.enums.Visibility;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-
-    List<Post> getPostsByUserId(Long userId);
 
     @Query("""
             DELETE from Post b
@@ -22,9 +17,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 """)
     List<Post> deletePermanentlyOlderThan(LocalDateTime cutOff);
 
-    List<Post> findPostsByUserAndVisibility(User user, Visibility visibility);
+    List<Post> findByUser_IdAndVisibility(Long userId, Visibility visibility);
 
-    List<Post> getPostsByUser(@Param("user") User user);
-
-    List<Post> findPostsByUser(User user);
+    List<Post> findByUser_Id(Long userId);
 }

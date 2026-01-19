@@ -48,7 +48,7 @@ public class Comment {
     @Column(name = "modified_at", insertable = false)
     private LocalDateTime modifiedAt;
 
-    @Column(nullable = false, insertable = false)
+    @Column(nullable = false)
     @Builder.Default
     private boolean deleted = false;
 

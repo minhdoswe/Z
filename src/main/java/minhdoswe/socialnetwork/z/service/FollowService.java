@@ -2,14 +2,19 @@ package minhdoswe.socialnetwork.z.service;
 
 import lombok.RequiredArgsConstructor;
 import minhdoswe.socialnetwork.z.dto.response.FollowResponse;
+import minhdoswe.socialnetwork.z.dto.response.UserDTO;
 import minhdoswe.socialnetwork.z.entity.Follow;
 import minhdoswe.socialnetwork.z.entity.User;
 import minhdoswe.socialnetwork.z.exception.follow.FollowAlreadyEstablishedException;
 import minhdoswe.socialnetwork.z.exception.follow.UsersFollowThemselfException;
+import minhdoswe.socialnetwork.z.mapper.UserMapper;
 import minhdoswe.socialnetwork.z.repository.FollowRepository;
 import minhdoswe.socialnetwork.z.repository.UserRepository;
+import minhdoswe.socialnetwork.z.util.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +22,8 @@ public class FollowService {
 
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
+    private final UserMapper userMapper;
+    private final SecurityUtils securityUtils;
 
     @Transactional
     public FollowResponse follow(Long followerId, Long targetId) {
@@ -69,5 +76,17 @@ public class FollowService {
 
     public boolean existsFollowByFollowerIdAndTargetId(Long followerId, Long targetId) {
         return followRepository.existsFollowByFollowerIdAndTargetId(followerId, targetId);
+    }
+
+    public List<UserDTO> getFollowers(Long userId) {
+
+        return followRepository.findByTarget_Id(userId).stream()
+                .map(follow -> userMapper.toUserDTO(follow.getFollower())).toList();
+    }
+
+    public void deleteFollower(Long followerId) {
+
+        Long currentUserId = securityUtils.getCurrentUser().getId();
+        followRepository.deleteByFollowerIdAndTargetId(currentUserId, followerId);
     }
 }

@@ -66,4 +66,8 @@ public class Post {
     @Column(name = "downvote_count")
     @Builder.Default
     private Long downvoteCount = 0L;
+
+    @Column(name = "vote_score")
+    @Builder.Default
+    private Long voteScore = 0L;
 }

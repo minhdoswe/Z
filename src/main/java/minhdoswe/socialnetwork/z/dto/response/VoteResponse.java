@@ -7,7 +7,6 @@ import minhdoswe.socialnetwork.z.enums.VoteStatus;
 public class VoteResponse {
 
     private Long postId;
-    private Long upvoteCount;
-    private Long downvoteCount;
+    private Long voteScore;
     private VoteStatus voteStatus;
 }

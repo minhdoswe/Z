@@ -34,16 +34,18 @@ public class PostService {
     private final UserService userService;
 
     @Transactional
-    public void createPost(PostRequest postRequest) {
+    public PostResponse create(PostRequest postRequest) {
         User user = securityUtils.getCurrentUser();
         Post post = postMapper.toPost(postRequest);
         post.setUser(user);
-        postRepository.save(post);
+        Post savedPost = postRepository.save(post);
+
+        return postMapper.toPostResponse(savedPost);
     }
 
     @Transactional
     @PreAuthorize("@customSecurity.isPostOwner(#postId)")
-    public void deletePost(Long postId) {
+    public void delete(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
@@ -52,24 +54,25 @@ public class PostService {
 
     @Transactional
     @PreAuthorize("@customSecurity.isPostOwner(#postId)")
-    public void modifyPost(Long postId, PostRequest postRequest) {
+    public PostResponse modify(Long postId, PostRequest postRequest) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
         postMapper.updatePostFromRequest(postRequest, post);
 
         postRepository.save(post);
+
+        return postMapper.toPostResponse(post);
     }
 
-    public List<PostResponse> findPostByUserId(Long targetId) {
+    public List<PostResponse> findByUserId(Long targetId) {
 
-        User user = securityUtils.getCurrentUser();
-        Long userId = user.getId();
+        Long userId = securityUtils.getCurrentUser().getId();
 
         boolean isOwner = userId.equals(targetId);
 
         if (isOwner) {
-            return fetchPostsByOwnerOrFollower(user);
+            return fetchByOwnerIdOrFollowerId(targetId);
         }
 
         log.info(userId + "                " + targetId);
@@ -79,28 +82,31 @@ public class PostService {
         User targetUser = userService.getUserById(targetId);
 
         if (isFollower) {
-            return fetchPostsByOwnerOrFollower(targetUser);
+            return fetchByOwnerIdOrFollowerId(targetId);
         }
 
-        return fetchPostsByNonFollower(targetUser);
+        return fetchByNonFollowerId(targetId);
     }
 
-    private List<PostResponse> fetchPostsByOwnerOrFollower(User user) {
-        log.info("in method fetch post by owner of follower  " + user.getId());
-        return postRepository.findPostsByUser(user)
+    private List<PostResponse> fetchByOwnerIdOrFollowerId(Long userId) {
+
+        return postRepository.findByUser_Id(userId)
                 .stream().map(postMapper::toPostResponse)
                 .toList();
     }
 
-    private List<PostResponse> fetchPostsByNonFollower(User user) {
-        return postRepository.findPostsByUserAndVisibility(user, Visibility.PUBLIC)
+    private List<PostResponse> fetchByNonFollowerId(Long userId) {
+        return postRepository.findByUser_IdAndVisibility(userId, Visibility.PUBLIC)
                 .stream().map(postMapper::toPostResponse)
                 .toList();
     }
 
-    public Post getPostById(Long postId) {
-        return postRepository.findById(postId)
+    @PreAuthorize("@customSecurity.canViewPost(#postId)")
+    public PostResponse getById(Long postId) {
+        Post post =  postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post not found"));
+
+        return postMapper.toPostResponse(post);
     }
 
 
