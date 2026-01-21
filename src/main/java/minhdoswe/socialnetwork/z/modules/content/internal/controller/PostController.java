@@ -3,7 +3,7 @@ package minhdoswe.socialnetwork.z.modules.content.internal.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import minhdoswe.socialnetwork.z.modules.content.internal.annotation.CurrentUserId;
+import minhdoswe.socialnetwork.z.common.annotation.CurrentUserId;
 import minhdoswe.socialnetwork.z.modules.content.internal.model.dto.PostRequest;
 import minhdoswe.socialnetwork.z.modules.content.internal.model.dto.PostResponse;
 import minhdoswe.socialnetwork.z.modules.content.internal.service.PostService;

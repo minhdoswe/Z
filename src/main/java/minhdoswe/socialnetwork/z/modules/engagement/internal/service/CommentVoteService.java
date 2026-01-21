@@ -3,11 +3,9 @@ package minhdoswe.socialnetwork.z.modules.engagement.internal.service;
 import lombok.RequiredArgsConstructor;
 import minhdoswe.socialnetwork.z.modules.engagement.internal.model.dto.CommentVoteRequest;
 import minhdoswe.socialnetwork.z.modules.engagement.internal.model.dto.CommentVoteResponse;
-import minhdoswe.socialnetwork.z.modules.content.internal.model.entity.Comment;
 import minhdoswe.socialnetwork.z.modules.engagement.internal.model.entity.CommentVote;
-import minhdoswe.socialnetwork.z.modules.user.internal.model.entity.User;
 import minhdoswe.socialnetwork.z.modules.engagement.internal.enums.CommentVoteType;
-import minhdoswe.socialnetwork.z.modules.content.internal.exception.comment.CommentNotFoundException;
+
 import minhdoswe.socialnetwork.z.modules.content.internal.mapper.CommentMapper;
 import minhdoswe.socialnetwork.z.modules.engagement.internal.mapper.CommentVoteMapper;
 import minhdoswe.socialnetwork.z.modules.content.internal.repository.CommentRepository;
@@ -31,14 +29,9 @@ public class CommentVoteService {
     private final CommentVoteMapper commentVoteMapper;
 
     @PreAuthorize("@customSecurity.canViewComment(#commentId)")
-    public CommentVoteResponse vote(Long commentId, CommentVoteRequest commentVoteRequest) {
+    public CommentVoteResponse vote(Long currentUserId, Long commentId, CommentVoteRequest commentVoteRequest) {
 
-        User user = securityUtils.getCurrentUser();
-
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException("comment not found"));
-
-        Optional<CommentVote> existingCommentVoteOpt = commentVoteRepository.findByComment_IdAndUser_Id(commentId, user.getId());
+        Optional<CommentVote> existingCommentVoteOpt = commentVoteRepository.findByComment_IdAndUser_Id(commentId, currentUserId);
         CommentVoteType incomingCommentVoteType = commentVoteRequest.getCommentVoteType();
 
         if (existingCommentVoteOpt.isPresent()) {

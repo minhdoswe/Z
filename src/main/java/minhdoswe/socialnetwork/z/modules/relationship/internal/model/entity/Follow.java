@@ -28,13 +28,11 @@ public class Follow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "follower_id", nullable = false)
-    private User follower;
+    @Column(name = "follower_id", nullable = false)
+    private Long followerId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "target_id", nullable = false)
-    private User target;
+    @Column(name = "target_id", nullable = false)
+    private Long targetId;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)

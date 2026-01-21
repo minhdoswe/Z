@@ -2,8 +2,8 @@ package minhdoswe.socialnetwork.z.modules.relationship.internal.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import minhdoswe.socialnetwork.z.common.annotation.CurrentUserId;
 import minhdoswe.socialnetwork.z.modules.relationship.internal.model.dto.FollowResponse;
-import minhdoswe.socialnetwork.z.modules.user.internal.model.dto.UserDTO;
 import minhdoswe.socialnetwork.z.modules.relationship.internal.service.FollowService;
 import minhdoswe.socialnetwork.z.common.util.SecurityUtils;
 import org.springframework.http.HttpStatus;
@@ -22,32 +22,28 @@ public class FollowController {
     private final FollowService followService;
 
     @PostMapping("/users/{targetId}/follow")
-    public ResponseEntity<FollowResponse> follow(@PathVariable Long targetId) {
+    public ResponseEntity<FollowResponse> follow(@CurrentUserId Long currentUserId, @PathVariable Long targetId) {
 
-        Long followerId = securityUtils.getCurrentUser().getId();
-
-        FollowResponse followResponse = followService.follow(followerId, targetId);
+        FollowResponse followResponse = followService.follow(currentUserId, targetId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(followResponse);
     }
 
     @DeleteMapping("/users/{targetId}/follow")
-    public ResponseEntity<Void> unfollow(@PathVariable Long targetId) {
-        log.info("reached unfollow controller for target: " + targetId);
-        Long followerId = securityUtils.getCurrentUser().getId();
+    public ResponseEntity<Void> unfollow(@CurrentUserId Long currentUserId, @PathVariable Long targetId) {
 
-        followService.unfollow(followerId, targetId); // Assuming this returns void or response
+        followService.unfollow(currentUserId, targetId); // Assuming this returns void or response
 
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user/{targetId}/followers")
-    public ResponseEntity<List<UserDTO>> getFollowers(@PathVariable Long targetId) {
-
-        List<UserDTO> userDTOList = followService.getFollowers(targetId);
-
-        return ResponseEntity.ok(userDTOList);
-    }
+//    @GetMapping("/user/{targetId}/followers")
+//    public ResponseEntity<List<UserDTO>> getFollowers(@PathVariable Long targetId) {
+//
+//        List<UserDTO> userDTOList = followService.getFollowers(targetId);
+//
+//        return ResponseEntity.ok(userDTOList);
+//    }
 
     @DeleteMapping("/user/followers/{followerId}")
     public ResponseEntity<Void> deleteFollower(@PathVariable Long followerId) {

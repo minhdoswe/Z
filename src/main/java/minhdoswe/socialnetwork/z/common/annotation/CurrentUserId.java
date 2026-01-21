@@ -1,4 +1,4 @@
-package minhdoswe.socialnetwork.z.modules.content.internal.annotation;
+package minhdoswe.socialnetwork.z.common.annotation;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

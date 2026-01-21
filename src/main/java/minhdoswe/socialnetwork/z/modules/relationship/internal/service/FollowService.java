@@ -2,27 +2,19 @@ package minhdoswe.socialnetwork.z.modules.relationship.internal.service;
 
 import lombok.RequiredArgsConstructor;
 import minhdoswe.socialnetwork.z.modules.relationship.internal.model.dto.FollowResponse;
-import minhdoswe.socialnetwork.z.modules.user.internal.model.dto.UserDTO;
 import minhdoswe.socialnetwork.z.modules.relationship.internal.model.entity.Follow;
-import minhdoswe.socialnetwork.z.modules.user.internal.model.entity.User;
-import minhdoswe.socialnetwork.z.modules.engagement.internal.exception.follow.FollowAlreadyEstablishedException;
-import minhdoswe.socialnetwork.z.modules.engagement.internal.exception.follow.UsersFollowThemselfException;
-import minhdoswe.socialnetwork.z.modules.user.internal.mapper.UserMapper;
+import minhdoswe.socialnetwork.z.modules.relationship.internal.exception.follow.FollowAlreadyEstablishedException;
+import minhdoswe.socialnetwork.z.modules.relationship.internal.exception.follow.UsersFollowThemselfException;
 import minhdoswe.socialnetwork.z.modules.relationship.internal.repository.FollowRepository;
-import minhdoswe.socialnetwork.z.modules.user.internal.repository.UserRepository;
 import minhdoswe.socialnetwork.z.common.util.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class FollowService {
 
-    private final UserRepository userRepository;
     private final FollowRepository followRepository;
-    private final UserMapper userMapper;
     private final SecurityUtils securityUtils;
 
     @Transactional
@@ -36,12 +28,10 @@ public class FollowService {
             throw new FollowAlreadyEstablishedException("Follow is already established");
         }
 
-        User followerReference = userRepository.getReferenceById(followerId);
-        User targetReference = userRepository.getReferenceById(targetId);
-
         Follow follow = Follow.builder()
-                .follower(followerReference)
-                .target(targetReference).build();
+                .followerId(followerId)
+                .targetId(targetId)
+                .build();
 
         followRepository.save(follow);
 
@@ -78,11 +68,11 @@ public class FollowService {
         return followRepository.existsFollowByFollowerIdAndTargetId(followerId, targetId);
     }
 
-    public List<UserDTO> getFollowers(Long userId) {
-
-        return followRepository.findByTarget_Id(userId).stream()
-                .map(follow -> userMapper.toUserDTO(follow.getFollower())).toList();
-    }
+//    public List<UserDTO> getFollowers(Long userId) {
+//
+//        return followRepository.findByTarget_Id(userId).stream()
+//                .map(follow -> userMapper.toUserDTO(follow.getFollowerId())).toList();
+//    }
 
     public void deleteFollower(Long followerId) {
 
