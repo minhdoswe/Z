@@ -1,15 +1,15 @@
 package minhdoswe.socialnetwork.z.common.security.expression;
 
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.modules.content.model.entity.Comment;
-import minhdoswe.socialnetwork.z.modules.content.model.entity.Post;
-import minhdoswe.socialnetwork.z.modules.user.model.entity.User;
-import minhdoswe.socialnetwork.z.modules.content.enums.Visibility;
-import minhdoswe.socialnetwork.z.modules.content.exception.comment.CommentNotFoundException;
-import minhdoswe.socialnetwork.z.modules.content.exception.post.post.PostNotFoundException;
-import minhdoswe.socialnetwork.z.modules.content.repository.CommentRepository;
-import minhdoswe.socialnetwork.z.modules.relationship.repository.FollowRepository;
-import minhdoswe.socialnetwork.z.modules.content.repository.PostRepository;
+import minhdoswe.socialnetwork.z.modules.content.internal.model.entity.Comment;
+import minhdoswe.socialnetwork.z.modules.content.internal.model.entity.Post;
+import minhdoswe.socialnetwork.z.modules.user.internal.model.entity.User;
+import minhdoswe.socialnetwork.z.modules.content.internal.enums.Visibility;
+import minhdoswe.socialnetwork.z.modules.content.internal.exception.comment.CommentNotFoundException;
+import minhdoswe.socialnetwork.z.modules.content.internal.exception.post.post.PostNotFoundException;
+import minhdoswe.socialnetwork.z.modules.content.internal.repository.CommentRepository;
+import minhdoswe.socialnetwork.z.modules.relationship.internal.repository.FollowRepository;
+import minhdoswe.socialnetwork.z.modules.content.internal.repository.PostRepository;
 import minhdoswe.socialnetwork.z.common.util.SecurityUtils;
 import org.springframework.stereotype.Component;
 

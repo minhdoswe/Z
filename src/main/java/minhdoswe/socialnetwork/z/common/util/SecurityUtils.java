@@ -1,8 +1,8 @@
 package minhdoswe.socialnetwork.z.common.util;
 
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.modules.user.model.entity.User;
-import minhdoswe.socialnetwork.z.modules.user.exception.auth.UserNotAuthenticatedException;
+import minhdoswe.socialnetwork.z.modules.user.internal.model.entity.User;
+import minhdoswe.socialnetwork.z.modules.user.internal.auth.UserNotAuthenticatedException;
 import minhdoswe.socialnetwork.z.common.security.user.CustomUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

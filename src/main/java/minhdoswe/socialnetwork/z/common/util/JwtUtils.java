@@ -36,10 +36,11 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(bytes);
     }
 
-    public String generateAccessToken(String username) {
+    public String generateAccessToken(String username, Long id) {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "access");
+        claims.put("userId", id);
         return createToken(claims, username);
     }
 
@@ -63,6 +64,10 @@ public class JwtUtils {
             String username = claims.getSubject();
 
             return username.equals(userDetails.getUsername());
+    }
+
+    public Long extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", Long.class));
     }
 
     public String extractUsername(String token) {

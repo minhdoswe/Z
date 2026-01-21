@@ -1,7 +1,7 @@
 package minhdoswe.socialnetwork.z.common.security.user;
 
-import minhdoswe.socialnetwork.z.modules.user.repository.UserRepository;
-import minhdoswe.socialnetwork.z.modules.user.model.entity.User;
+import minhdoswe.socialnetwork.z.modules.user.internal.repository.UserRepository;
+import minhdoswe.socialnetwork.z.modules.user.internal.model.entity.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

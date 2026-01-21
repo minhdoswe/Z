@@ -36,10 +36,7 @@ CREATE TABLE posts (
     visibility ENUM('PRIVATE', 'PUBLIC') NOT NULL,
     upvote_count BIGINT NOT NULL,
     downvote_count BIGINT NOT NULL,
-    vote_score BIGINT NOT NULL,
-
-
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    vote_score BIGINT NOT NULL
 );
 
 CREATE TABLE follows (
@@ -92,7 +89,6 @@ CREATE TABLE comments (
     vote_score BIGINT,
 
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE
 );
 

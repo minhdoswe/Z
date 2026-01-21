@@ -2,7 +2,7 @@ package minhdoswe.socialnetwork.z.common.security.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.modules.user.model.entity.User;
+import minhdoswe.socialnetwork.z.modules.user.internal.model.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
