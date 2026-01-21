@@ -87,6 +87,9 @@ CREATE TABLE comments (
     modified_at TIMESTAMP,
     deleted BOOLEAN NOT NULL,
     deleted_at TIMESTAMP,
+    upvote_count BIGINT,
+    downvote_count BIGINT,
+    vote_score BIGINT,
 
     FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -97,7 +100,7 @@ CREATE TABLE comment_votes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     comment_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
-    vote_status enum('UPVOTE', 'DOWNVOTE') NOT NULL,
+    comment_vote_status enum('UPVOTE', 'DOWNVOTE') NOT NULL,
 
     FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
