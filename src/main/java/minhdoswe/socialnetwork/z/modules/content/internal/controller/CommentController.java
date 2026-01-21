@@ -1,6 +1,7 @@
 package minhdoswe.socialnetwork.z.modules.content.internal.controller;
 
 import lombok.RequiredArgsConstructor;
+import minhdoswe.socialnetwork.z.common.annotation.CurrentUserId;
 import minhdoswe.socialnetwork.z.modules.content.internal.model.dto.CommentRequest;
 import minhdoswe.socialnetwork.z.modules.content.internal.model.dto.CommentResponse;
 import minhdoswe.socialnetwork.z.modules.content.internal.mapper.CommentMapper;
@@ -20,9 +21,9 @@ public class CommentController {
     private final CommentMapper commentMapper;
 
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<CommentResponse> create(@PathVariable Long postId, @RequestBody CommentRequest commentRequest) {
+    public ResponseEntity<CommentResponse> create(@CurrentUserId Long userId, @PathVariable Long postId, @RequestBody CommentRequest commentRequest) {
 
-        CommentResponse commentResponse = commentService.create(postId, commentRequest);
+        CommentResponse commentResponse = commentService.create(userId, postId, commentRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(commentResponse);
     }
@@ -52,9 +53,9 @@ public class CommentController {
     }
 
     @PostMapping("/comments/{commentId}/replies")
-    public ResponseEntity<CommentResponse> reply(@PathVariable Long commentId, @RequestBody CommentRequest commentRequest) {
+    public ResponseEntity<CommentResponse> reply(@CurrentUserId Long userId, @PathVariable Long commentId, @RequestBody CommentRequest commentRequest) {
 
-        CommentResponse commentResponse = commentService.reply(commentId, commentRequest);
+        CommentResponse commentResponse = commentService.reply(userId, commentId, commentRequest);
 
         return ResponseEntity.ok(commentResponse);
     }

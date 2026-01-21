@@ -5,17 +5,21 @@ import minhdoswe.socialnetwork.z.modules.content.internal.model.dto.CommentReque
 import minhdoswe.socialnetwork.z.modules.content.internal.model.dto.CommentResponse;
 import minhdoswe.socialnetwork.z.modules.content.internal.model.entity.Comment;
 import minhdoswe.socialnetwork.z.modules.content.internal.model.entity.Post;
-import minhdoswe.socialnetwork.z.modules.user.internal.model.entity.User;
 import minhdoswe.socialnetwork.z.modules.content.internal.exception.comment.CommentNotFoundException;
 import minhdoswe.socialnetwork.z.modules.content.internal.exception.post.post.PostNotFoundException;
 import minhdoswe.socialnetwork.z.modules.content.internal.mapper.CommentMapper;
 import minhdoswe.socialnetwork.z.modules.content.internal.repository.CommentRepository;
 import minhdoswe.socialnetwork.z.modules.content.internal.repository.PostRepository;
 import minhdoswe.socialnetwork.z.common.util.SecurityUtils;
+import minhdoswe.socialnetwork.z.modules.user.UserAPI;
+import minhdoswe.socialnetwork.z.modules.user.dto.UserDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -25,17 +29,18 @@ public class CommentService {
     private final CommentMapper commentMapper;
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final UserAPI userAPI;
 
     @PreAuthorize("@customSecurity.canViewPost(#postId)")
-    public CommentResponse create(Long postId, CommentRequest commentRequest) {
-        User user = securityUtils.getCurrentUser();
+    public CommentResponse create(Long currentUserId, Long postId, CommentRequest commentRequest) {
+
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("post not found"));
 
         Comment comment = Comment.builder()
                 .content(commentRequest.getContent())
                 .parent(null)
-                .user(user)
+                .userId(currentUserId)
                 .post(post)
                 .build();
 
@@ -67,8 +72,16 @@ public class CommentService {
     public List<CommentResponse> getByPost(Long postId) {
 
         List<Comment> commentList = commentRepository.findByPost_IdAndParent_Id(postId, null);
+        Set<Long> userIdSet = commentList.stream()
+                .map(Comment::getUserId)
+                .collect(Collectors.toSet());
 
-        return commentList.stream().map(commentMapper::toCommentResponse)
+        Map<Long, UserDTO> userDTOMap = userAPI.getUserDTO(userIdSet);
+
+        return commentList.stream().map(
+                comment -> commentMapper.toCommentResponse(comment)
+                    .setUserDTO(userDTOMap.get(comment.getUserId()))
+                )
                 .toList();
     }
 
@@ -82,15 +95,15 @@ public class CommentService {
     }
 
     @PreAuthorize("@customSecurity.canViewComment(#commentId)")
-    public CommentResponse reply(Long commentId, CommentRequest commentRequest) {
-        User user = securityUtils.getCurrentUser();
+    public CommentResponse reply(Long currentUserId, Long commentId, CommentRequest commentRequest) {
+
         Comment parent = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("comment not found"));
 
         Comment comment = Comment.builder()
                 .content(commentRequest.getContent())
                 .parent(parent)
-                .user(user)
+                .userId(currentUserId)
                 .post(parent.getPost())
                 .build();
 

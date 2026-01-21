@@ -32,7 +32,7 @@ public class Comment {
     private Post post;
 
     @Column(name = "user_id", nullable = false)
-    private String userId;
+    private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", nullable = false)

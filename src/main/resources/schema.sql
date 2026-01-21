@@ -36,7 +36,8 @@ CREATE TABLE posts (
     visibility ENUM('PRIVATE', 'PUBLIC') NOT NULL,
     upvote_count BIGINT NOT NULL,
     downvote_count BIGINT NOT NULL,
-    vote_score BIGINT NOT NULL
+    vote_score BIGINT NOT NULL,
+    hidden BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE follows (

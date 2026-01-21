@@ -65,4 +65,7 @@ public class Post {
     @Column(name = "vote_score")
     @Builder.Default
     private Long voteScore = 0L;
+
+    @Builder.Default
+    private boolean hidden = false;
 }
