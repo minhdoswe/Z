@@ -2,8 +2,8 @@ package minhdoswe.socialnetwork.z.modules.user.internal.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import minhdoswe.socialnetwork.z.modules.content.internal.model.entity.Post;
-import minhdoswe.socialnetwork.z.modules.content.internal.enums.Visibility;
+import minhdoswe.socialnetwork.z.modules.user.internal.model.enums.Role;
+import minhdoswe.socialnetwork.z.modules.user.internal.model.enums.Visibility;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;
@@ -47,9 +47,14 @@ public class User {
     @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id")
+    )
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private List<Role> roles;
 
     @CreatedDate
     @Column(name = "create_at", nullable = false, updatable = false)
@@ -70,13 +75,4 @@ public class User {
     @Column(nullable = false)
     @Builder.Default
     private Visibility visibility = Visibility.PUBLIC;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> posts;
-
-    public enum Role {
-        USER,
-        MODERATOR,
-        ADMIN
-    }
 }

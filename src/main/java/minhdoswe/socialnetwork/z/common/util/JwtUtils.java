@@ -8,8 +8,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import minhdoswe.socialnetwork.z.modules.user.internal.model.enums.Role;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -17,6 +17,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -37,11 +38,17 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(bytes);
     }
 
-    public String generateAccessToken(Long userId, String role) {
+    public String generateAccessToken(Long userId, List<Role> roles, String email, String username) {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "access");
-        claims.put("role", role);
+        List<String> roleNames = roles.stream().map(
+                role -> role.name()
+        ).toList();
+        claims.put("roles", roleNames);
+        claims.put("username", username);
+        claims.put("email", email);
+//        claims.put("issueAt", Instant.now(clock));
         return createToken(claims, userId);
     }
 
@@ -69,12 +76,24 @@ public class JwtUtils {
             return true;
     }
 
+    public List<Role> extractUserRoles(String token) {
+        return extractClaim(token, claims -> claims.get("roles", List.class));
+    }
+
     public Long extractUserId(String token) {
-        return extractClaim(token, claims -> claims.get("userId", Long.class));
+        return Long.parseLong(extractClaim(token, claims -> claims.getSubject()));
     }
 
     public String extractUsername(String token) {
-        return extractClaim(token, claims -> claims.getSubject());
+        return extractClaim(token, claims -> claims.get("username", String.class));
+    }
+
+    public Instant extractIssueAt(String token) {
+        return extractClaim(token, claims -> claims.get("issueAt", Instant.class));
+    }
+
+    public String extractEmail(String token) {
+        return extractClaim(token, claims -> claims.get("email", String.class));
     }
 
     private Date extractExpires(String token) {

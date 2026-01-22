@@ -6,15 +6,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import minhdoswe.socialnetwork.z.common.util.JwtUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -22,6 +28,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
     private final UserDetailsService userDetailsService;
+
+    @Value("${jwt.access-token-expiration}")
+    private Long ACCESS_TOKEN_EXPIRATION;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -37,13 +46,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
         String username = jwtUtils.extractUsername(token);
 
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
         if (username != null || SecurityContextHolder.getContext().getAuthentication() == null) {
 
             if (jwtUtils.validate(token)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
+
+                Jwt jwt = Jwt.withTokenValue(token)
+                        .header("alg", "RS256")
+                        .subject(String.valueOf(jwtUtils.extractUserId(token)))
+                        .claim("email", jwtUtils.extractEmail(token))  // Payload: Custom claims
+                        .build();
+
+                List<SimpleGrantedAuthority> authorities = jwtUtils.extractUserRoles(token).stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
+                        .collect(Collectors.toList());
+
+                JwtAuthenticationToken authToken = new JwtAuthenticationToken(
+                    jwt,
+                        authorities
                 );
                 authToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)

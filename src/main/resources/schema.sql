@@ -1,5 +1,6 @@
 USE z;
 
+DROP TABLE IF EXISTS user_roles;
 DROP TABLE IF EXISTS comment_votes;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS follows;
@@ -7,6 +8,7 @@ DROP TABLE IF EXISTS votes;
 DROP TABLE IF EXISTS posts;
 DROP TABLE IF EXISTS refresh_tokens;
 DROP TABLE IF EXISTS users;
+
 
 CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -16,7 +18,7 @@ CREATE TABLE users (
     last_name VARCHAR(21) NOT NULL,
     email VARCHAR(51) UNIQUE ,
     phone_number VARCHAR(11) UNIQUE ,
-    role ENUM('USER') NOT NULL,
+    roles ENUM('USER') NOT NULL,
     create_at TIMESTAMP NOT NULL,
     modified_at TIMESTAMP,
     deleted BOOLEAN NOT NULL DEFAULT 1,
@@ -103,5 +105,11 @@ CREATE TABLE comment_votes (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
 
     CONSTRAINT uk_comment_user UNIQUE (comment_id, user_id)
+);
+
+CREATE TABLE user_roles (
+                            user_id BIGINT NOT NULL,
+                            roles VARCHAR(255) NOT NULL, -- or whatever length matches your Enum
+                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE -- Ensure 'users' matches your actual User table name
 )
 

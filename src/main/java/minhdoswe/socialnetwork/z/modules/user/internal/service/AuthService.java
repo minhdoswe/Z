@@ -10,6 +10,7 @@ import minhdoswe.socialnetwork.z.modules.user.internal.auth.AccountDeactivatedEx
 import minhdoswe.socialnetwork.z.modules.user.internal.auth.RefreshTokenNotFoundException;
 import minhdoswe.socialnetwork.z.modules.user.internal.auth.UserAlreadyExistsException;
 import minhdoswe.socialnetwork.z.modules.user.internal.mapper.UserMapper;
+import minhdoswe.socialnetwork.z.modules.user.internal.model.enums.Role;
 import minhdoswe.socialnetwork.z.modules.user.internal.repository.RefreshTokenRepository;
 import minhdoswe.socialnetwork.z.modules.user.internal.repository.UserRepository;
 import minhdoswe.socialnetwork.z.modules.user.internal.model.dto.auth.LoginRequest;
@@ -23,6 +24,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +54,7 @@ public class AuthService {
         }
         User user = userMapper.toUser(request);
         user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
-        user.setRole(User.Role.USER);
+        user.setRoles(List.of(Role.USER));
         userRepository.save(user);
 
         return generateRefreshTokenAndAccessToken(user);
@@ -87,7 +90,7 @@ public class AuthService {
     public AuthResponse generateRefreshTokenAndAccessToken(User user) {
 
         String refreshToken = refreshTokenService.generate(user).getToken();
-        String accessToken = jwtUtils.generateAccessToken(user.getId(), String.valueOf(user.getRole()));
+        String accessToken = jwtUtils.generateAccessToken(user.getId(), user.getRoles(), user.getEmail(), user.getUsername());
         return AuthResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
