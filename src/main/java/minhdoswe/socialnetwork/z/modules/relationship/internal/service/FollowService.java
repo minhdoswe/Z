@@ -64,10 +64,6 @@ public class FollowService {
         && followRepository.existsFollowByFollowerIdAndTargetId(user2Id, user1Id);
     }
 
-    public boolean existsFollowByFollowerIdAndTargetId(Long followerId, Long targetId) {
-        return followRepository.existsFollowByFollowerIdAndTargetId(followerId, targetId);
-    }
-
 //    public List<UserDTO> getFollowers(Long userId) {
 //
 //        return followRepository.findByTarget_Id(userId).stream()

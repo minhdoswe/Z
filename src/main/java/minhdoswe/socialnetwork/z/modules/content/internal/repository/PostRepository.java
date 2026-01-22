@@ -17,7 +17,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 """)
     List<Post> deletePermanentlyOlderThan(LocalDateTime cutOff);
 
-    List<Post> findByUser_IdAndVisibility(Long userId, Visibility visibility);
+    List<Post> findByUserIdAndVisibility(Long userId, Visibility visibility);
 
-    List<Post> findByUser_Id(Long userId);
+    List<Post> findByUserId(Long userId);
 }

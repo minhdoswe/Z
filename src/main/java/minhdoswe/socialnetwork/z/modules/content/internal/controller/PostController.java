@@ -36,20 +36,20 @@ public class PostController {
     }
 
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<Void> delete(@PathVariable Long postId) {
-        postService.delete(postId);
+    public ResponseEntity<Void> delete(@CurrentUserId Long currentUserId, @PathVariable Long postId) {
+        postService.delete(currentUserId, postId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/posts/{postId}")
-    public ResponseEntity<String> modify(@PathVariable Long postId, @RequestBody PostRequest postRequest) {
-        postService.modify(postId, postRequest);
+    public ResponseEntity<String> modify(@CurrentUserId Long currentUserId, @PathVariable Long postId, @RequestBody PostRequest postRequest) {
+        postService.modify(currentUserId, postId, postRequest);
         return ResponseEntity.ok("Post modified successfully");
     }
 
     @GetMapping("/users/{userId}/posts")
-    public ResponseEntity<List<PostResponse>> findByUserId(@PathVariable Long userId) {
-        List<PostResponse> postResponseDTOList = postService.findByUserId(userId);
+    public ResponseEntity<List<PostResponse>> findByUserId(@CurrentUserId Long currentUserId, @PathVariable Long userId) {
+        List<PostResponse> postResponseDTOList = postService.findByUserId(currentUserId, userId);
 
         return ResponseEntity.ok(postResponseDTOList);
     }

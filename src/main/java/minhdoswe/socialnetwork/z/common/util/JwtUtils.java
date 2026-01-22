@@ -1,6 +1,7 @@
 package minhdoswe.socialnetwork.z.common.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -36,34 +37,36 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(bytes);
     }
 
-    public String generateAccessToken(String username, Long id) {
+    public String generateAccessToken(Long userId, String role) {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "access");
-        claims.put("userId", id);
-        return createToken(claims, username);
+        claims.put("role", role);
+        return createToken(claims, userId);
     }
 
-    String createToken(Map<String, Object> claims, String username) {
+    String createToken(Map<String, Object> claims, Long userId) {
 
         Date expiryDate = Date.from(Instant.now(clock).plusMillis(ACCESS_TOKEN_EXPIRATION));
 
         return Jwts.builder()
                 .claims(claims)
-                .subject(username)
+                .subject(String.valueOf(userId))
                 .issuedAt(Date.from(Instant.now(clock)))
                 .expiration(expiryDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public boolean validate(String token, UserDetails userDetails) {
+    public boolean validate(String token) {
 
-            Claims claims = extractAllClaim(token);
+            try {
+                Claims claims = extractAllClaim(token);
+            } catch (JwtException e) {
+                return false;
+            }
 
-            String username = claims.getSubject();
-
-            return username.equals(userDetails.getUsername());
+            return true;
     }
 
     public Long extractUserId(String token) {

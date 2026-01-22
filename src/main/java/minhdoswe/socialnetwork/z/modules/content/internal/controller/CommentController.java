@@ -69,9 +69,9 @@ public class CommentController {
     }
 
     @GetMapping("/users/{userId}/comments")
-    public ResponseEntity<List<CommentResponse>> getByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<CommentResponse>> getByUser(@CurrentUserId Long currentUserId, @PathVariable Long userId) {
 
-        List<CommentResponse> commentResponseList = commentService.getByUser(userId);
+        List<CommentResponse> commentResponseList = commentService.getByUser(currentUserId, userId);
 
         return ResponseEntity.ok(commentResponseList);
     }

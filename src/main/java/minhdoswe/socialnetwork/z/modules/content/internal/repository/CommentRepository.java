@@ -16,13 +16,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
         SELECT c FROM Comment c
         JOIN c.post p
         WHERE p.visibility = 'PUBLIC'
-        OR p.user.id = :currentUserId
-        OR p.visibility = 'PRIVATE'
-            AND EXISTS (
-                SELECT f FROM Follow f
-                WHERE f.follower.id = :currentUserId
-                    AND f.target = p.user
-            )
+        OR p.userId = :currentUserId
+        OR (p.visibility = 'PRIVATE' AND p.userId IN :followingIds)
 """)
-    List<Comment> findVisibleCommentsByTargetUser(Long currentUserId, Long targetUserId);
+    List<Comment> findVisibleCommentsByTargetUser(Long currentUserId, Long targetUserId, List<Long> followingIds);
 }
