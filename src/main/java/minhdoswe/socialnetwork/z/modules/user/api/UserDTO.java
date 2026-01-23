@@ -1,4 +1,4 @@
-package minhdoswe.socialnetwork.z.modules.user.dto;
+package minhdoswe.socialnetwork.z.modules.user.api;
 
 import lombok.Data;
 

@@ -11,8 +11,8 @@
 //import minhdoswe.socialnetwork.z.modules.content.internal.mapper.CommentMapper;
 //import minhdoswe.socialnetwork.z.modules.content.internal.repository.CommentRepository;
 //import minhdoswe.socialnetwork.z.modules.content.internal.repository.PostRepository;
-//import minhdoswe.socialnetwork.z.modules.relationship.RelationshipAPI;
-//import minhdoswe.socialnetwork.z.modules.user.UserAPI;
+//import minhdoswe.socialnetwork.z.modules.relationship.api.RelationshipAPI;
+//import minhdoswe.socialnetwork.z.modules.user.api.UserAPI;
 //import org.springframework.security.access.prepost.PreAuthorize;
 //import org.springframework.stereotype.Service;
 //

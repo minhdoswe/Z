@@ -3,7 +3,7 @@
 //import lombok.Builder;
 //import lombok.Data;
 //import lombok.experimental.Accessors;
-//import minhdoswe.socialnetwork.z.modules.user.dto.UserDTO;
+//import minhdoswe.socialnetwork.z.modules.user.api.UserDTO;
 //
 //import java.time.LocalDateTime;
 //

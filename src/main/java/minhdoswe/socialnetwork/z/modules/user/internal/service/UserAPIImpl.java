@@ -1,8 +1,8 @@
 package minhdoswe.socialnetwork.z.modules.user.internal.service;
 
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.modules.user.UserAPI;
-import minhdoswe.socialnetwork.z.modules.user.dto.UserDTO;
+import minhdoswe.socialnetwork.z.modules.user.api.UserAPI;
+import minhdoswe.socialnetwork.z.modules.user.api.UserDTO;
 import minhdoswe.socialnetwork.z.modules.user.internal.auth.user.UserNotFoundException;
 import minhdoswe.socialnetwork.z.modules.user.internal.mapper.UserMapper;
 import minhdoswe.socialnetwork.z.modules.user.internal.model.entity.User;

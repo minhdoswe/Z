@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import minhdoswe.socialnetwork.z.common.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
@@ -46,8 +48,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
         String username = jwtUtils.extractUsername(token);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
         if (username != null || SecurityContextHolder.getContext().getAuthentication() == null) {
 
             if (jwtUtils.validate(token)) {
@@ -57,6 +57,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .subject(String.valueOf(jwtUtils.extractUserId(token)))
                         .claim("email", jwtUtils.extractEmail(token))  // Payload: Custom claims
                         .build();
+
+                log.info(String.valueOf(jwtUtils.extractUserId(token)));
 
                 List<SimpleGrantedAuthority> authorities = jwtUtils.extractUserRoles(token).stream()
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))

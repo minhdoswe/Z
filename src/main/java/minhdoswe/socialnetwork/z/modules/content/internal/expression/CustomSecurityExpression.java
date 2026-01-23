@@ -9,7 +9,7 @@
 //import minhdoswe.socialnetwork.z.modules.content.internal.exception.post.post.PostNotFoundException;
 //import minhdoswe.socialnetwork.z.modules.content.internal.repository.CommentRepository;
 //import minhdoswe.socialnetwork.z.modules.content.internal.repository.PostRepository;
-//import minhdoswe.socialnetwork.z.modules.relationship.RelationshipAPI;
+//import minhdoswe.socialnetwork.z.modules.relationship.api.RelationshipAPI;
 //import org.springframework.stereotype.Component;
 //
 //@Component("customSecurity")

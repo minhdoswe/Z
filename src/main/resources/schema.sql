@@ -46,6 +46,7 @@ CREATE TABLE follows (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     follower_id BIGINT NOT NULL,
     target_id BIGINT NOT NULL,
+    hidden BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL,
 
     FOREIGN KEY (follower_id) REFERENCES users(id) ON DELETE CASCADE,

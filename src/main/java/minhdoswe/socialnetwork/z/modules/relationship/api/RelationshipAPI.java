@@ -1,4 +1,4 @@
-package minhdoswe.socialnetwork.z.modules.relationship;
+package minhdoswe.socialnetwork.z.modules.relationship.api;
 
 import java.util.List;
 

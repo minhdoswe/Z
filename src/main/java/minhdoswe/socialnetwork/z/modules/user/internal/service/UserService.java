@@ -1,6 +1,7 @@
 package minhdoswe.socialnetwork.z.modules.user.internal.service;
 
 import lombok.RequiredArgsConstructor;
+import minhdoswe.socialnetwork.z.modules.user.api.UserDeactivateAccountEvent;
 import minhdoswe.socialnetwork.z.modules.user.internal.model.dto.auth.DeleteAccountRequest;
 import minhdoswe.socialnetwork.z.modules.user.internal.model.dto.auth.RecoverAccountRequest;
 import minhdoswe.socialnetwork.z.modules.user.internal.model.entity.User;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.ApplicationEventPublisher;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
     private final AuthMapper authMapper;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional
     public void deactivateAccount(DeleteAccountRequest deleteAccountRequest) {
@@ -31,6 +34,8 @@ public class UserService {
             throw new BadCredentialsException("Incorrect password");
         }
         userRepository.delete(user);
+
+        applicationEventPublisher.publishEvent(new UserDeactivateAccountEvent(user.getId()));
     }
 
     @Transactional

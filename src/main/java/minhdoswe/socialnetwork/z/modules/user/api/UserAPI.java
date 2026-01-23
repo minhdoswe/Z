@@ -1,8 +1,5 @@
-package minhdoswe.socialnetwork.z.modules.user;
+package minhdoswe.socialnetwork.z.modules.user.api;
 
-import minhdoswe.socialnetwork.z.modules.user.dto.UserDTO;
-
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 

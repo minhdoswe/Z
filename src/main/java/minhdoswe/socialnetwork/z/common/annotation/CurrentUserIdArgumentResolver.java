@@ -31,7 +31,7 @@ public class CurrentUserIdArgumentResolver implements HandlerMethodArgumentResol
         }
 
         // 2. Get the Claim
-        Object rawId = jwt.getClaim("userId"); // Change "userId" to whatever your key is
+        Object rawId = jwt.getSubject(); // Change "userId" to whatever your key is
 
         // 3. Safe Conversion (Fixes the Integer/Long crash)
         if (rawId instanceof Number number) {

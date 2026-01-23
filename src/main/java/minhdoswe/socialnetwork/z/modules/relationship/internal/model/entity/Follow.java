@@ -34,6 +34,9 @@ public class Follow {
     @Column(name = "target_id", nullable = false)
     private Long targetId;
 
+    @Builder.Default
+    private boolean hidden = false;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;

@@ -1,7 +1,7 @@
 package minhdoswe.socialnetwork.z.modules.relationship.internal.service;
 
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.modules.relationship.RelationshipAPI;
+import minhdoswe.socialnetwork.z.modules.relationship.api.RelationshipAPI;
 import minhdoswe.socialnetwork.z.modules.relationship.internal.model.entity.Follow;
 import minhdoswe.socialnetwork.z.modules.relationship.internal.repository.FollowRepository;
 import org.springframework.stereotype.Service;

@@ -77,7 +77,10 @@ public class JwtUtils {
     }
 
     public List<Role> extractUserRoles(String token) {
-        return extractClaim(token, claims -> claims.get("roles", List.class));
+        List<String> roleNames = extractClaim(token, claims -> claims.get("roles", List.class));
+        return roleNames.stream()
+                .map(roleName -> Role.valueOf(roleName))
+                .toList();
     }
 
     public Long extractUserId(String token) {

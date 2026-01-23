@@ -13,7 +13,7 @@
 //import minhdoswe.socialnetwork.z.modules.content.internal.mapper.PostMapper;
 //import minhdoswe.socialnetwork.z.modules.content.internal.repository.PostRepository;
 //import minhdoswe.socialnetwork.z.modules.content.internal.expression.CustomSecurityExpression;
-//import minhdoswe.socialnetwork.z.modules.relationship.RelationshipAPI;
+//import minhdoswe.socialnetwork.z.modules.relationship.api.RelationshipAPI;
 //import org.springframework.security.access.prepost.PreAuthorize;
 //import org.springframework.stereotype.Service;
 //import org.springframework.transaction.annotation.Transactional;

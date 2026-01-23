@@ -2,7 +2,7 @@
 //
 //import minhdoswe.socialnetwork.z.modules.content.internal.model.dto.CommentResponse;
 //import minhdoswe.socialnetwork.z.modules.content.internal.model.entity.Comment;
-//import minhdoswe.socialnetwork.z.modules.user.UserAPI;
+//import minhdoswe.socialnetwork.z.modules.user.api.UserAPI;
 //import org.mapstruct.Mapper;
 //import org.mapstruct.Mapping;
 //import org.mapstruct.ReportingPolicy;
