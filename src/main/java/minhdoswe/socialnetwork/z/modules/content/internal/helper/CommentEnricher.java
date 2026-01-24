@@ -5,7 +5,7 @@
 //import minhdoswe.socialnetwork.z.modules.content.internal.model.dto.CommentResponse;
 //import minhdoswe.socialnetwork.z.modules.content.internal.model.entity.Comment;
 //import minhdoswe.socialnetwork.z.modules.user.api.UserAPI;
-//import minhdoswe.socialnetwork.z.modules.user.api.UserDTO;
+//import minhdoswe.socialnetwork.z.modules.user.api.dto.UserDTO;
 //import org.springframework.stereotype.Component;
 //
 //import java.util.List;

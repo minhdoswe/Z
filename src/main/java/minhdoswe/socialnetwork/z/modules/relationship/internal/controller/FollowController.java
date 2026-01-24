@@ -5,12 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import minhdoswe.socialnetwork.z.common.annotation.CurrentUserId;
 import minhdoswe.socialnetwork.z.modules.relationship.internal.model.dto.FollowResponse;
 import minhdoswe.socialnetwork.z.modules.relationship.internal.service.FollowService;
-import minhdoswe.socialnetwork.z.common.util.SecurityUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,7 +15,6 @@ import java.util.List;
 @Slf4j
 public class FollowController {
 
-    private final SecurityUtils securityUtils;
     private final FollowService followService;
 
     @PostMapping("/users/{targetId}/follow")
@@ -45,11 +41,11 @@ public class FollowController {
 //        return ResponseEntity.ok(userDTOList);
 //    }
 
-    @DeleteMapping("/user/followers/{followerId}")
-    public ResponseEntity<Void> deleteFollower(@PathVariable Long followerId) {
-
-        followService.deleteFollower(followerId);
-
-        return ResponseEntity.noContent().build();
-    }
+//    @DeleteMapping("/user/followers/{followerId}")
+//    public ResponseEntity<Void> deleteFollower(@PathVariable Long followerId) {
+//
+//        followService.deleteFollower(followerId);
+//
+//        return ResponseEntity.noContent().build();
+//    }
 }

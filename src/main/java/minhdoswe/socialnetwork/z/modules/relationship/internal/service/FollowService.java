@@ -6,7 +6,6 @@ import minhdoswe.socialnetwork.z.modules.relationship.internal.model.entity.Foll
 import minhdoswe.socialnetwork.z.modules.relationship.internal.exception.follow.FollowAlreadyEstablishedException;
 import minhdoswe.socialnetwork.z.modules.relationship.internal.exception.follow.UsersFollowThemselfException;
 import minhdoswe.socialnetwork.z.modules.relationship.internal.repository.FollowRepository;
-import minhdoswe.socialnetwork.z.common.util.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class FollowService {
 
     private final FollowRepository followRepository;
-    private final SecurityUtils securityUtils;
 
     @Transactional
     public FollowResponse follow(Long followerId, Long targetId) {
@@ -70,9 +68,9 @@ public class FollowService {
 //                .map(follow -> userMapper.toUserDTO(follow.getFollowerId())).toList();
 //    }
 
-    public void deleteFollower(Long followerId) {
-
-        Long currentUserId = securityUtils.getCurrentUser().getId();
-        followRepository.deleteByFollowerIdAndTargetId(currentUserId, followerId);
-    }
+//    public void deleteFollower(Long followerId) {
+//
+//        Long currentUserId = securityUtils.getCurrentUser().getId();
+//        followRepository.deleteByFollowerIdAndTargetId(currentUserId, followerId);
+//    }
 }

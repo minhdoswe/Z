@@ -1,5 +1,6 @@
 USE z;
 
+DROP TABLE IF EXISTS event_publication;
 DROP TABLE IF EXISTS user_roles;
 DROP TABLE IF EXISTS comment_votes;
 DROP TABLE IF EXISTS comments;
@@ -112,5 +113,15 @@ CREATE TABLE user_roles (
                             user_id BIGINT NOT NULL,
                             roles VARCHAR(255) NOT NULL, -- or whatever length matches your Enum
                             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE -- Ensure 'users' matches your actual User table name
+);
+
+CREATE TABLE event_publication (
+                                   id               BINARY(16) NOT NULL,
+                                   listener_id      VARCHAR(512) NOT NULL,
+                                   event_type       VARCHAR(512) NOT NULL,
+                                   serialized_event TEXT NOT NULL,
+                                   publication_date DATETIME(6) NOT NULL,
+                                   completion_date  DATETIME(6),
+                                   PRIMARY KEY (id)
 )
 

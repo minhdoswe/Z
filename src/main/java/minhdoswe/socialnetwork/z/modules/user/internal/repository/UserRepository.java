@@ -2,6 +2,7 @@ package minhdoswe.socialnetwork.z.modules.user.internal.repository;
 
 import minhdoswe.socialnetwork.z.modules.user.internal.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -72,5 +73,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
         OR LOWER(u.username) LIKE LOWER(CONCAT('%', :keyword, '%'))
         """)
     List<User> search(@Param("keyword") String keyword);
+
+    @Modifying
+    @Query("""
+        UPDATE User u
+        SET u.deleted = true
+        WHERE u.id = :userId
+""")
+    void deactivateUser(Long userId);
 
 }

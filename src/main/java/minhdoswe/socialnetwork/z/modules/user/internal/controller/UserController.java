@@ -1,11 +1,7 @@
 package minhdoswe.socialnetwork.z.modules.user.internal.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import minhdoswe.socialnetwork.z.modules.user.internal.model.dto.auth.DeleteAccountRequest;
-import minhdoswe.socialnetwork.z.modules.user.internal.model.dto.auth.RecoverAccountRequest;
-import minhdoswe.socialnetwork.z.modules.user.internal.service.UserService;
-import org.springframework.http.ResponseEntity;
+import minhdoswe.socialnetwork.z.modules.auth.internal.service.AuthService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,18 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserService userService;
+    private final AuthService authService;
 
-    @DeleteMapping("/me/deactivation")
-    public ResponseEntity<String> deactivateAccount(@Valid @RequestBody DeleteAccountRequest deleteAccountRequest) {
 
-        userService.deactivateAccount(deleteAccountRequest);
-        return ResponseEntity.ok("Account deactivated, schedule to permanently delete after 30 day");
-    }
-
-    @PostMapping("/me/reactivation")
-    public ResponseEntity<String> recoverAccount(@Valid @RequestBody RecoverAccountRequest recoverAccountRequest) {
-        userService.recoverAccount(recoverAccountRequest);
-        return ResponseEntity.ok("Account recovered successfully");
-    }
 }
